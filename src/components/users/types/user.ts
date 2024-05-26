@@ -18,7 +18,7 @@ export const userSchema = z.object({
   website: z.string().url(),
 });
 
-export type GeoServiceFunction = (
+export type CountryFromCoordinates = (
   lat: string,
   lon: string,
 ) => TaskEither<Error, string>;

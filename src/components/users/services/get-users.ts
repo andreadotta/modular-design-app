@@ -3,11 +3,11 @@ import { TaskEither, taskEither } from '@/shared/utils/task-either';
 import { ValidatedUser } from '..';
 import { userAdapter } from './user-adapter';
 import { userValidator } from './user-validator';
-import { GeoServiceFunction } from '../types/user';
+import { CountryFromCoordinates } from '../types/user';
 import { ErrorMessage } from '@/shared/components/error-message';
 
 export const getUsers = (
-  geoService: GeoServiceFunction,
+  geoService: CountryFromCoordinates,
 ): TaskEither<Error, ValidatedUser[]> => {
   const fetchUsers = async (): Promise<Either<Error, ValidatedUser[]>> => {
     const response = await fetch('https://jsonplaceholder.typicode.com/users');

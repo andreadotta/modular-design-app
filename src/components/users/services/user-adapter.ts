@@ -1,5 +1,5 @@
 import { ErrorMessage } from '@/shared/components/error-message';
-import { GeoServiceFunction, User } from '../types/user';
+import { CountryFromCoordinates, User } from '../types/user';
 import { Either, isRight, right, left } from '@/shared/utils/either';
 import { TaskEither, taskEither } from '@/shared/utils/task-either';
 
@@ -12,7 +12,7 @@ const ensureHttp = (url: string): string => {
 
 const adaptUser = async (
   input: any,
-  geoService: GeoServiceFunction,
+  geoService: CountryFromCoordinates,
 ): Promise<Either<Error, User>> => {
   const countryResult = await geoService(
     input.address.geo.lat,
@@ -41,7 +41,7 @@ const adaptUser = async (
 
 export const userAdapter = (
   input: any,
-  geoService: GeoServiceFunction,
+  geoService: CountryFromCoordinates,
 ): TaskEither<Error, User> => {
   return taskEither(() => adaptUser(input, geoService));
 };
