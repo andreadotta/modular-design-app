@@ -12,8 +12,11 @@ A modular and scalable front-end application example developed using a component
 ### **Architectural Principles**
 
 - **Component-Driven Development**: Development is based on autonomous, reusable, and testable components.
-- **Functional Programming**: Business logic is implemented using functional programming paradigms to improve predictability and reduce bugs.
-- **Hexagonal Architecture**: The application is structured to separate business logic from user interface code and external services, enhancing testability and maintainability.
+- **Component-Based Design**: Each component is designed to be autonomous and independent, encapsulating logic, state, and user interface.
+- **Separation of Concerns**: Clear separation between business logic, presentation, and state management.
+- **Single Responsibility Principle**: Each component and service is responsible for a single functionality or aggregate.
+- **Service Layer Pattern**: Encapsulates data access logic in a separate layer, promoting maintainability and scalability.
+- **Container Components**: Components responsible for fetching data and passing it to presentational components.
 
 ### **Code Structure**
 
@@ -24,24 +27,23 @@ A modular and scalable front-end application example developed using a component
 ### **Installation**
 
 1. Clone the repository:
-    
-    ```bash
-    git clone https://github.com/your-username/ModularDesignApp.git
-    ```
-    
+
+   ```bash
+   git clone https://github.com/your-username/ModularDesignApp.git
+   ```
+
 2. Install dependencies:
-    
-    ```bash
-    cd ModularDesignApp
-    pnpm i
-    ```
-    
+
+   ```bash
+   cd ModularDesignApp
+   pnpm i
+   ```
+
 3. Start the application:
-    
-    ```bash
-    pnpm run dev
-    ```
-    
+
+   ```bash
+   pnpm run dev
+   ```
 
 ### **Contributing**
 
@@ -49,23 +51,23 @@ If you wish to contribute to the project, you are welcome! Follow these guidelin
 
 1. Fork the repository.
 2. Create a branch for your feature or fix:
-    
-    ```bash
-    git checkout -b feature/feature-name
-    ```
-    
+
+   ```bash
+   git checkout -b feature/feature-name
+   ```
+
 3. Commit your changes:
-    
-    ```bash
-    git commit -m 'Add new feature'
-    ```
-    
+
+   ```bash
+   git commit -m 'Add new feature'
+   ```
+
 4. Push the branch:
-    
-    ```bash
-    git push origin feature/feature-names
-    ```
-    
+
+   ```bash
+   git push origin feature/feature-names
+   ```
+
 5. Open a Pull Request.
 
 ## **Component Structure**
@@ -77,18 +79,18 @@ A component in our project can include various layers such as **`ui`**, **`hooks
 ### **Example Component Structure**
 
 1. **src/components**:
-    - **(component name)**:
-        - **hooks**:
-            - Contains custom hooks for managing the component's state and business logic.
-        - **services**:
-            - Includes services to fetch, adapt, and validate the component's data. These services handle communication with external APIs and other data sources.
-        - **types**:
-            - Definitions of types and interfaces to correctly type the component's data.
-        - **ui**:
-            - Contains user interface components for displaying and interacting with the component's data.
+   - **(component name)**:
+     - **hooks**:
+       - Contains custom hooks for managing the component's state and business logic.
+     - **services**:
+       - Includes services to fetch, adapt, and validate the component's data. These services handle communication with external APIs and other data sources.
+     - **types**:
+       - Definitions of types and interfaces to correctly type the component's data.
+     - **ui**:
+       - Contains user interface components for displaying and interacting with the component's data.
 2. **src/shared**:
-    - **components**:
-        - Contains shared and generic components such as error messages and loading spinners that can be used across various parts of the application.
+   - **components**:
+     - Contains shared and generic components such as error messages and loading spinners that can be used across various parts of the application.
 
 ### **Design Patterns Used**
 
@@ -96,7 +98,7 @@ A component in our project can include various layers such as **`ui`**, **`hooks
 
 In this mini project, we adopt a Component-Based Design approach. Each component is designed to be autonomous and independent. Components are reusable units that encapsulate the logic, state, and user interface necessary to manage a specific entity or aggregate. Each component has its flexible internal architecture that can include various layers such as hooks, services, types, and user interface. This approach ensures that components can be developed, tested, and maintained in isolation, reducing dependencies between different parts of the application.
 
-For example, the ***ui*** folder of a component contains the part specific to managing the user interface, while the ***services*** folder includes the logic for data access and API calls. The ***hooks*** folder manages the component's state and business logic, and the ***types*** folder defines the types and interfaces to ensure the correct typing of data. In this way, each component remains focused on its own responsibility, respecting the Single Responsibility Principle and facilitating reusability in different parts of the application.
+For example, the **_ui_** folder of a component contains the part specific to managing the user interface, while the **_services_** folder includes the logic for data access and API calls. The **_hooks_** folder manages the component's state and business logic, and the **_types_** folder defines the types and interfaces to ensure the correct typing of data. In this way, each component remains focused on its own responsibility, respecting the Single Responsibility Principle and facilitating reusability in different parts of the application.
 
 **Separation of Concerns**:
 
@@ -119,16 +121,16 @@ The data access logic is encapsulated in a service layer, clearly separating API
 **Users**
 
 - **src/components/users/hooks**:
-    - **`use-users.ts`**: Custom hook to manage user state.
+  - **`use-users.ts`**: Custom hook to manage user state.
 - **src/components/users/services**:
-    - **`get-users.ts`**: Service to fetch user data.
-    - **`user-adapter.ts`**: Adapter for user data.
-    - **`user-validator.ts`**: Validator for user data.
+  - **`get-users.ts`**: Service to fetch user data.
+  - **`user-adapter.ts`**: Adapter for user data.
+  - **`user-validator.ts`**: Validator for user data.
 - **src/components/users/types**:
-    - **`user.ts`**: Type definitions for users.
+  - **`user.ts`**: Type definitions for users.
 - **src/components/users/ui**:
-    - **`user-components.tsx`**: UI components for managing users.
-    - **`users-screen.tsx`**: Main screen for displaying users.
+  - **`user-components.tsx`**: UI components for managing users.
+  - **`users-screen.tsx`**: Main screen for displaying users.
 
 **Dependency Management Between Components**
 
@@ -153,7 +155,10 @@ const adaptUser = async (
   input: any,
   geoService: (lat: string, lon: string) => TaskEither<Error, string>,
 ): Promise<Either<Error, User>> => {
-  const countryResult = await geoService(input.address.geo.lat, input.address.geo.lng)();
+  const countryResult = await geoService(
+    input.address.geo.lat,
+    input.address.geo.lng,
+  )();
   const user: User = {
     id: input.id,
     name: input.name,
@@ -184,7 +189,6 @@ export const userAdapter = (
 Custom hooks also receive services as parameters, ensuring that the logic for fetching and managing state can be tested independently.
 
 ```tsx
-
 export const useUsers = (
   geoService: (lat: string, lon: string) => TaskEither<Error, string>,
 ): UserState & { fetchData: () => void } => {
@@ -251,14 +255,12 @@ describe('UserService', () => {
 In the real case, the page passes the actual geolocation service when calling the user service.
 
 ```tsx
-
 async function fetchInitialData(): Promise<ValidatedUser[]> {
   const result = await getUsers(getCountryFromCoordinates)();
   console.log('User page', 'fetchInitialData');
   const data = isRight(result) ? result.value : [];
   return data.slice(0, 8);
 }
-
 ```
 
 This way, dependency injection allows components to be more modular, easily testable, and flexible, improving the overall architecture of the application.
@@ -294,7 +296,6 @@ The main responsibilities of "Screens" are:
 **`src/app/users/page.tsx`**
 
 ```tsx
-
 import { getUsers } from '@/users/services/get-users';
 import { ValidatedUser } from '@/users/types/user';
 import { isRight } from '@/shared/utils/either';
@@ -317,7 +318,6 @@ export default async function Page() {
   const initialData = await fetchInitialData();
   return <UsersScreen initialData={initialData} />;
 }
-
 ```
 
 **`src/components/screens/users/users-screen.tsx`**
@@ -325,7 +325,6 @@ export default async function Page() {
 This component represents the main users' page. It manages the state of user data, data loading, and coordinates the child components to display the user list.
 
 ```tsx
-
 'use client';
 
 import React, { useState } from 'react';
@@ -369,7 +368,6 @@ const UsersScreen = ({ initialData }: UsersPageProps) => {
 };
 
 export default UsersScreen;
-
 ```
 
 In this example, the **`UsersScreen`** component is responsible for:
@@ -406,7 +404,6 @@ export default async function Page() {
   const initialData = await fetchInitialData();
   return <UsersScreen initialData={initialData} />;
 }
-
 ```
 
 ### **Client-Side Updates**
@@ -446,7 +443,6 @@ export const useUsers = (): UserState & { fetchData: () => void } => {
 
   return { ...state, fetchData };
 };
-
 ```
 
 ### **Description of the Mechanism**
@@ -462,14 +458,12 @@ In our project, we use a revalidation mechanism to ensure that user data is regu
 To configure this, we have implemented the following in our code:
 
 ```tsx
-
 export const revalidate = 900; // Revalidate every 15 minutes
 ```
 
 Additionally, we specify the Node.js runtime environment in our **`next.config.mjs`** file to ensure that our server-side code runs efficiently. This configuration is necessary for the revalidation to work properly in a server-side context:
 
 ```jsx
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   serverRuntimeConfig: {
