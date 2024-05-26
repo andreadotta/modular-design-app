@@ -1,3 +1,4 @@
+import { TaskEither } from '@/shared/utils/task-either';
 import { z } from 'zod';
 
 export const addressSchema = z.object({
@@ -17,7 +18,11 @@ export const userSchema = z.object({
   website: z.string().url(),
 });
 
+export type GeoServiceFunction = (
+  lat: string,
+  lon: string,
+) => TaskEither<Error, string>;
 export type Address = z.infer<typeof addressSchema>;
 export type User = z.infer<typeof userSchema>;
 
-export type ValidatedUser = User & { validated: boolean; };
+export type ValidatedUser = User & { validated: boolean };

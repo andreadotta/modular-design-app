@@ -1,29 +1,22 @@
-// src/app/layout.tsx
-
 import Sidebar from '@/components/sidebar/ui';
-import { Box, Container, Toolbar } from '@mui/material';
-import type { Metadata } from 'next';
+import { Box, Container } from '@mui/material';
+import { Head, Html } from 'next/document';
 import { Inter } from 'next/font/google';
 
 const inter = Inter({ subsets: ['latin'] });
 
-export default async function RootLayout({
+export default function MainLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
+    <html>
       <head>
-        <meta charSet={'utf-8'} />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#000000" />
-        <meta
-          name="description"
-          content="Web site created using create-react-app"
-        />
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
-      <body className={inter.className}>
+      <body>
         <Container maxWidth="lg" sx={{ display: 'flex' }}>
           <Sidebar />
           <Box

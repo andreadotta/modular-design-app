@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Either, isLeft, isRight } from '../../../shared/utils/either';
 import { getUsers } from '../services/get-users';
-import { ValidatedUser } from '../types/user';
+import { GeoServiceFunction, ValidatedUser } from '../types/user';
 
 type UserState = {
   loading: boolean;
@@ -10,7 +10,9 @@ type UserState = {
   data: ValidatedUser[] | null;
 };
 
-export const useUsers = (): UserState & { fetchData: () => void } => {
+export const useUsers = (
+  geoService: GeoServiceFunction,
+): UserState & { fetchData: () => void } => {
   const [state, setState] = useState<UserState>({
     loading: true,
     error: null,
@@ -19,7 +21,7 @@ export const useUsers = (): UserState & { fetchData: () => void } => {
 
   const fetchData = useCallback(async () => {
     setState((prevState) => ({ ...prevState, loading: true }));
-    const result = await getUsers()();
+    const result = await getUsers(geoService)();
 
     if (isLeft(result)) {
       setState({ loading: false, error: result.value.message, data: null });

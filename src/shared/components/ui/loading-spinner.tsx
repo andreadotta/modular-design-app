@@ -9,13 +9,13 @@ type LoadingSpinnerProps = {
   disableShrink?: boolean;
 };
 
-const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
+const LoadingSpinner = ({
   type = 'circular',
   color = 'primary',
   variant = 'indeterminate',
   value = 0,
   disableShrink = false,
-}) => {
+}: LoadingSpinnerProps) => {
   return (
     <Box
       display="flex"
