@@ -27,14 +27,15 @@ const UsersScreen = ({ initialData }: UsersPageProps) => {
 
   return (
     <div>
-      <UserList data={data} loading={loading} />
       <Box display="flex" justifyContent="space-between" alignItems="center">
+        <h1>Users List</h1>
         <Toolbar>
           <Button variant="contained" color="primary" onClick={handleRefresh}>
             Refresh
           </Button>
         </Toolbar>
       </Box>
+      <UserList data={data} loading={loading} />
     </div>
   );
 };

@@ -13,14 +13,6 @@ type UserListProps = {
 const UserList = ({ data, loading }: UserListProps) => {
   return (
     <div>
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <h1>Users List</h1>
-        <Toolbar>
-          <Button variant="contained" color="primary">
-            Refresh
-          </Button>
-        </Toolbar>
-      </Box>
       {loading ? (
         <LoadingSpinner type="circular" color="primary" />
       ) : (
