@@ -20,9 +20,22 @@ A modular and scalable front-end application example developed using a component
 
 ### **Code Structure**
 
-- **components**: Contains user interface components, each with its own hooks, business logic, and adapters.
-- **shared**: Contains reusable components and utilities across the project.
-- **utils**: Includes generic helper functions such as **`fetchData`**, **`either`**, and **`taskEither`**.
+We need to clearly distinguish three levels in our application: **Component**, **Application**, and **Design System**.
+
+1. **Component**:
+    - This level contains autonomous and reusable components that manage independent entities and aggregates.
+    - Components at this level are designed to be composed at higher levels.
+2. **Application**:
+    - This level manages the overall application.
+    - Here, libraries like the Design System are used and customized.
+    - Any customizations to the Design System are done at this level, not at the level of individual components.
+    - Design System customizations are passed as props to the components that need them.
+3. **Design System**:
+    - A shared library that provides the base design and styles for the application.
+    - It is a shared dependency at the Application level.
+    - Specific customizations should be handled at the Application level and then propagated to the Components.
+
+In summary, the Design System is a shared library, and any customization is managed at the Application level, not at the level of individual Components. This approach ensures that the Design System remains consistent and that customizations are centralized and easy to manage.
 
 ### **Installation**
 
