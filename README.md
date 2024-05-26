@@ -35,7 +35,7 @@ We need to clearly distinguish three levels in our application: **Component**, *
     - It is a shared dependency at the Application level.
     - Specific customizations should be handled at the Application level and then propagated to the Components.
 
-In summary, the Design System is a shared library, and any customization is managed at the Application level, not at the level of individual Components. This approach ensures that the Design System remains consistent and that customizations are centralized and easy to manage.
+In summary, the Design System is a shared library, and any customization is managed at the Application level, not at the level of individual Components. This approach ensures that the Design System remains consistent and that customizations are centralized and easy to manage. In this project, we have chosen MUI (Material-UI) as our external Design System. Customizations will be done using styled components. This approach ensures that the Design System remains consistent and that customizations are centralized and easy to manage.
 
 ### **Installation**
 
