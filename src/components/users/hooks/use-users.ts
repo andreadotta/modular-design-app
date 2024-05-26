@@ -1,13 +1,13 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
-import { Either, isLeft, isRight } from '../../../shared/utils/either';
+import { Either, isLeft, isRight } from '@/shared/utils/either';
 import { getUsers } from '../services/get-users';
-import { CountryFromCoordinates, ValidatedUser } from '../types/user';
+import { CountryFromCoordinates, User, ValidatedUser } from '../types/user';
 
 type UserState = {
   loading: boolean;
   error: string | null;
-  data: ValidatedUser[] | null;
+  data: User[] | null;
 };
 
 export const useUsers = (

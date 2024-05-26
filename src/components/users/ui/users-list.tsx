@@ -1,16 +1,14 @@
 // src/components/ui/UserList.tsx
 import React from 'react';
-import { Box, Button, Toolbar } from '@mui/material';
-import { ValidatedUser } from '@/users/types/user';
-import UsersGrid from '@/users/ui/user-components';
+import { User, UsersGrid } from '@/users';
 import LoadingSpinner from '@/shared/components/ui/loading-spinner';
 
 type UserListProps = {
-  data: ValidatedUser[];
+  data: User[];
   loading: boolean;
 };
 
-const UserList = ({ data, loading }: UserListProps) => {
+const UsersList = ({ data, loading }: UserListProps) => {
   return (
     <div>
       {loading ? (
@@ -22,4 +20,4 @@ const UserList = ({ data, loading }: UserListProps) => {
   );
 };
 
-export default UserList;
+export default UsersList;

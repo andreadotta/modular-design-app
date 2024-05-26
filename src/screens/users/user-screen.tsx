@@ -1,19 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
-import { getUsers } from '@/users/services/get-users';
-import { ValidatedUser } from '@/users/types/user';
+import { useState } from 'react';
 import { isRight } from '@/shared/utils/either';
-import UserList from '@/components/users/ui/users-list';
 import { Box, Toolbar, Button } from '@mui/material';
-import { getCountryFromCoordinates } from '@/components/geo';
+import { getCountryFromCoordinates } from '@/geo';
+import { getUsers, User, UsersList } from '@/users';
 
 export type UsersPageProps = {
-  initialData: ValidatedUser[];
+  initialData: User[];
 };
 
 const UsersScreen = ({ initialData }: UsersPageProps) => {
-  const [data, setData] = useState<ValidatedUser[]>(initialData);
+  const [data, setData] = useState<User[]>(initialData);
   const [loading, setLoading] = useState(false);
 
   const handleRefresh = async () => {
@@ -35,7 +33,7 @@ const UsersScreen = ({ initialData }: UsersPageProps) => {
           </Button>
         </Toolbar>
       </Box>
-      <UserList data={data} loading={loading} />
+      <UsersList data={data} loading={loading} />
     </div>
   );
 };

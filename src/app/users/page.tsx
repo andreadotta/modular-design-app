@@ -1,8 +1,7 @@
-import { getUsers } from '@/users/services/get-users';
-import { ValidatedUser } from '@/users/types/user';
+import { getUsers, User } from '@/users';
 import { isRight } from '@/shared/utils/either';
-import UsersScreen from '../../components/screens/users/user-screen';
-import { getCountryFromCoordinates } from '@/components/geo';
+import UsersScreen from '@/screens/users/user-screen';
+import { getCountryFromCoordinates } from '@/geo';
 
 /**
  * Renders the Users page component with initial data fetched from the server.
@@ -17,7 +16,7 @@ import { getCountryFromCoordinates } from '@/components/geo';
  */
 
 // Asynchronous function to fetch the initial data
-async function fetchInitialData(): Promise<ValidatedUser[]> {
+async function fetchInitialData(): Promise<User[]> {
   // Call the getUsers service and log the action
   const result = await getUsers(getCountryFromCoordinates)();
   console.log('User page', 'fetchInitialData');

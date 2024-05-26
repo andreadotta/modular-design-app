@@ -1,6 +1,7 @@
 import { isRight, left, right } from '@/shared/utils/either';
 import { getUsers } from './get-users';
 import { TaskEither, taskEither } from '@/shared/utils/task-either';
+import { ErrorMessage } from '@/shared/components/error-message';
 
 const mockGeoService = (
   lat: string,
@@ -10,7 +11,7 @@ const mockGeoService = (
     Promise.resolve(
       lat === '-37.3159' && lon === '81.1496'
         ? right('Australia')
-        : left(new Error('Country not found')),
+        : left(new Error(ErrorMessage('Country not found'))),
     ),
   );
 };
@@ -25,7 +26,6 @@ describe('UserService', () => {
       expect(users.length).toBe(1);
       expect(users[0].name).toBe('Leanne Graham');
       expect(users[0].address.country).toBe('Australia');
-      expect(users[0].validated).toBe(true);
     }
   });
 });

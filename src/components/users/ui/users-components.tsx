@@ -1,11 +1,8 @@
-// src/users/ui/user-components.tsx
-
-import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
-import { ValidatedUser } from '../types/user';
+import { User } from '../types/user';
 
 type UsersGridProps = {
-  data: ValidatedUser[];
+  data: User[];
 };
 
 export default function UsersGrid({ data }: UsersGridProps) {

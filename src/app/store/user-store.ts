@@ -1,9 +1,9 @@
+import { User } from '@/users';
 import { create } from 'zustand';
-import { ValidatedUser } from '@/users/types/user';
 
 type UserState = {
-  users: ValidatedUser[];
-  setUsers: (users: ValidatedUser[]) => void;
+  users: User[];
+  setUsers: (users: User[]) => void;
 };
 
 export const useUserStore = create<UserState>((set) => ({
