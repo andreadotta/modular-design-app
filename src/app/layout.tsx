@@ -1,5 +1,9 @@
+'use client';
+
 import Sidebar from '@/components/sidebar/ui';
-import { Box, Container } from '@mui/material';
+import StyledBox from '@/design-system/box/styled-box';
+import theme from '@/theme';
+import { Box, Container, ThemeProvider } from '@mui/material';
 import { Head, Html } from 'next/document';
 import { Inter } from 'next/font/google';
 
@@ -17,19 +21,12 @@ export default function MainLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
       <body>
-        <Container maxWidth="lg" sx={{ display: 'flex' }}>
-          <Sidebar />
-          <Box
-            component="main"
-            sx={{
-              flexGrow: 1,
-              bgcolor: 'background.default',
-              p: 3,
-            }}
-          >
-            {children}
-          </Box>
-        </Container>
+        <ThemeProvider theme={theme}>
+          <Container maxWidth="lg" sx={{ display: 'flex' }}>
+            <Sidebar />
+            <StyledBox component="main">{children}</StyledBox>
+          </Container>
+        </ThemeProvider>
       </body>
     </html>
   );

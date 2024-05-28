@@ -1,7 +1,7 @@
-import { getUsers, User } from '@/users';
+import { getUsers, User } from '@/modules/users';
 import { isRight } from '@/shared/utils/either';
 import UsersScreen from '@/screens/users/user-screen';
-import { getCountryFromCoordinates } from '@/geo';
+import { getCountryFromCoordinates } from '@/modules/geo';
 
 /**
  * Renders the Users page component with initial data fetched from the server.
@@ -16,16 +16,33 @@ import { getCountryFromCoordinates } from '@/geo';
  */
 
 // Asynchronous function to fetch the initial data
+// Asynchronous function to fetch the initial data
 async function fetchInitialData(): Promise<User[]> {
   // Call the getUsers service and log the action
   const result = await getUsers(getCountryFromCoordinates)();
   console.log('User page', 'fetchInitialData');
 
   // If the result is right (success), use the value, otherwise use an empty array
-  const data = isRight(result) ? result.value : [];
+  if (isRight(result)) {
+    const data = result.value;
 
-  // Return only the first 8 users for testing purposes
-  return data.slice(0, 8);
+    // Log the type and content of data
+    // console.log('Fetched data:', data);
+    // console.log('Type of data:', typeof data);
+    // console.log('Is data an array:', Array.isArray(data));
+
+    // Check if data is an array before calling slice
+    if (Array.isArray(data)) {
+      // Return only the first 8 users for testing purposes
+      return data.slice(0, 8);
+    } else {
+      console.error('Data is not an array:', data);
+      return [];
+    }
+  } else {
+    console.error('Fetching users failed:', result);
+    return [];
+  }
 }
 
 // Set the revalidation interval to 900 seconds (15 minutes)

@@ -19,11 +19,12 @@
     ],
     "paths": {
       "@/shared/*": ["./src/shared/*"],
-      "@/screens/*": ["./src/screens/*"],
-      "@/users": ["./src/components/users/index"],
-      "@/geo": ["./src/components/geo/index"],
-      "@/auth": ["./src/components/auth/index"],
-      "@/*": ["./src/*"]
+      "@/screens/*": ["./src/components/screens/*"],
+      "@/users": ["./src/modules/users/index"],
+      "@/geo": ["./src/modules/geo/index"],
+      "@/auth": ["./src/modules/auth/index"],
+      "@/*": ["./src/*"],
+      "@mui/styled-engine": ["./node_modules/@mui/styled-engine-sc"]
     },
     "types": ["jest", "node"]
   },

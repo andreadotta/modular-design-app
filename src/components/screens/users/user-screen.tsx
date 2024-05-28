@@ -1,10 +1,10 @@
 'use client';
-
 import { useState } from 'react';
 import { isRight } from '@/shared/utils/either';
 import { Box, Toolbar, Button } from '@mui/material';
 import { getCountryFromCoordinates } from '@/geo';
 import { getUsers, User, UsersList } from '@/users';
+import CustomButton from '@/design-system/buttons/custom-button';
 
 export type UsersPageProps = {
   initialData: User[];
@@ -28,12 +28,22 @@ const UsersScreen = ({ initialData }: UsersPageProps) => {
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <h1>Users List</h1>
         <Toolbar>
-          <Button variant="contained" color="primary" onClick={handleRefresh}>
+          <CustomButton
+            variant="contained"
+            color="primary"
+            onClick={handleRefresh}
+          >
             Refresh
-          </Button>
+          </CustomButton>
         </Toolbar>
       </Box>
-      <UsersList data={data} loading={loading} />
+      <UsersList
+        data={data}
+        loading={loading}
+        fnTest={() => {
+          console.log('ciao');
+        }}
+      />
     </div>
   );
 };

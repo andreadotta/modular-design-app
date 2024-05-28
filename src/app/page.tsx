@@ -3,6 +3,7 @@ import { NextPageWithLayout } from './_app';
 import { Container, Box, Typography, Button } from '@mui/material';
 import Link from 'next/link';
 import MainLayout from './layout';
+import CustomButton from '@/design-system/buttons/custom-button';
 
 const Home: NextPageWithLayout = () => {
   return (
@@ -31,9 +32,9 @@ const Home: NextPageWithLayout = () => {
           we've implemented these best practices.
         </Typography>
         <Link href="/users" passHref>
-          <Button variant="contained" color="primary">
+          <CustomButton variant="contained" color="primary">
             View Users
-          </Button>
+          </CustomButton>
         </Link>
       </Box>
     </Container>

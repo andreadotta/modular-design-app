@@ -2,7 +2,7 @@
 
 import { useState, FormEvent, ChangeEvent } from 'react';
 import { Box, Button, TextField, Typography } from '@mui/material';
-import { LoginForm, useAuth } from '@/auth';
+import { LoginForm, useAuth } from '@/modules/auth';
 
 const AuthScreen = () => {
   const [email, setEmail] = useState('');

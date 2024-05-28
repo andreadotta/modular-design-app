@@ -1,20 +1,21 @@
-// src/components/ui/UserList.tsx
+'use client';
 import React from 'react';
-import { User, UsersGrid } from '@/users';
+import { User, UsersGrid } from '@/modules/users';
 import LoadingSpinner from '@/shared/components/ui/loading-spinner';
 
 type UserListProps = {
   data: User[];
   loading: boolean;
+  fnTest: () => void;
 };
 
-const UsersList = ({ data, loading }: UserListProps) => {
+const UsersList = ({ data, loading, fnTest }: UserListProps) => {
   return (
     <div>
       {loading ? (
         <LoadingSpinner type="circular" color="primary" />
       ) : (
-        <UsersGrid data={data} />
+        <UsersGrid data={data} fnTest={fnTest} />
       )}
     </div>
   );

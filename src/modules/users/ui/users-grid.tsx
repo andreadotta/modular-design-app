@@ -1,11 +1,14 @@
+'use client';
 import { DataGrid } from '@mui/x-data-grid';
 import { User } from '../types/user';
 
 type UsersGridProps = {
   data: User[];
+  fnTest: () => void;
 };
 
-export default function UsersGrid({ data }: UsersGridProps) {
+export default function UsersGrid({ data, fnTest }: UsersGridProps) {
+  fnTest();
   const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
     { field: 'name', headerName: 'Name', width: 150 },
