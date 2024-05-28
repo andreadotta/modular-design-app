@@ -1,4 +1,5 @@
-import { TextField, Box, Typography } from '@mui/material';
+// src/components/LoginForm.tsx
+import { TextField, Box, Typography, Button } from '@mui/material';
 
 type LoginFormProps = {
   email: string;
@@ -7,6 +8,7 @@ type LoginFormProps = {
   error: string | null;
   onEmailChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onPasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: (event: React.FormEvent) => void;
 };
 
 const LoginForm = ({
@@ -16,34 +18,47 @@ const LoginForm = ({
   error,
   onEmailChange,
   onPasswordChange,
+  onSubmit,
 }: LoginFormProps) => {
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
         Login
       </Typography>
-      <TextField
-        label="Email"
-        type="email"
-        value={email}
-        onChange={onEmailChange}
-        fullWidth
-        required
-      />
-      <TextField
-        label="Password"
-        type="password"
-        value={password}
-        onChange={onPasswordChange}
-        fullWidth
-        required
-        sx={{ marginTop: 2 }}
-      />
-      {error && (
-        <Typography color="error" variant="body2" sx={{ marginTop: 2 }}>
-          {error}
-        </Typography>
-      )}
+      <form onSubmit={onSubmit}>
+        <TextField
+          label="Email"
+          type="email"
+          value={email}
+          onChange={onEmailChange}
+          fullWidth
+          required
+        />
+        <TextField
+          label="Password"
+          type="password"
+          value={password}
+          onChange={onPasswordChange}
+          fullWidth
+          required
+          sx={{ marginTop: 2 }}
+        />
+        {error && (
+          <Typography color="error" variant="body2" sx={{ marginTop: 2 }}>
+            {error}
+          </Typography>
+        )}
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          sx={{ marginTop: 2 }}
+          disabled={loading}
+        >
+          {loading ? 'Loading...' : 'Login'}
+        </Button>
+      </form>
     </Box>
   );
 };

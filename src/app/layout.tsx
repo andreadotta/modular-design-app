@@ -3,11 +3,7 @@
 import Sidebar from '@/components/sidebar/ui';
 import StyledBox from '@/design-system/box/styled-box';
 import theme from '@/theme';
-import { Box, Container, ThemeProvider } from '@mui/material';
-import { Head, Html } from 'next/document';
-import { Inter } from 'next/font/google';
-
-const inter = Inter({ subsets: ['latin'] });
+import { Container, ThemeProvider } from '@mui/material';
 
 export default function MainLayout({
   children,
