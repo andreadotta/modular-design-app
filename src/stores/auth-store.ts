@@ -1,7 +1,6 @@
-// src/stores/auth-store.ts
 import { AuthUser } from '@/auth';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 
 type AuthState = {
   accessToken: string | null;
@@ -22,7 +21,7 @@ export const useAuthStore = create(
     }),
     {
       name: 'auth-storage', // nome del local storage
-      getStorage: () => localStorage,
+      storage: createJSONStorage(() => localStorage),
     },
   ),
 );

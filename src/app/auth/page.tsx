@@ -1,5 +1,5 @@
-import AuthScreen from '@/screens/auth/auth-screen';
+import AuthContainer from '@/components/containers/auth/auth-container';
 
 export default function LoginPage() {
-  return <AuthScreen />;
+  return <AuthContainer />;
 }

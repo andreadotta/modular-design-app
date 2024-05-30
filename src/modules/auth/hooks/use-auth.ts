@@ -1,7 +1,8 @@
 import { useState, useCallback } from 'react';
 import { authenticateUser } from '../services/auth-service';
-import { AuthResponse, AuthUser } from '../types/auth';
+import { AuthUser } from '../types/auth';
 import { isRight } from '@/shared/utils/either';
+import { useAuthStore } from '@/stores/auth-store';
 
 type AuthState = {
   loading: boolean;
@@ -16,21 +17,41 @@ export const useAuth = () => {
     user: null,
   });
 
-  const authenticate = useCallback(async (email: string) => {
-    setAuthState({ loading: true, error: null, user: null });
+  const { user, setUser, clearAuth } = useAuthStore();
 
-    const result = await authenticateUser(email)();
+  const authenticate = useCallback(
+    async (email: string) => {
+      setAuthState({ loading: true, error: null, user: null });
 
-    if (isRight(result)) {
-      setAuthState({
-        loading: false,
-        error: null,
-        user: result.value.user || null,
-      });
-    } else {
-      setAuthState({ loading: false, error: result.value.message, user: null });
-    }
-  }, []);
+      const result = await authenticateUser(email)();
 
-  return { authState, authenticate };
+      if (isRight(result)) {
+        const authenticatedUser = result.value.user || null;
+        setAuthState({
+          loading: false,
+          error: null,
+          user: authenticatedUser,
+        });
+        setUser(authenticatedUser);
+      } else {
+        setAuthState({
+          loading: false,
+          error: result.value.message,
+          user: null,
+        });
+      }
+    },
+    [setUser],
+  );
+
+  const logout = useCallback(() => {
+    clearAuth();
+    setAuthState({
+      loading: false,
+      error: null,
+      user: null,
+    });
+  }, [clearAuth]);
+
+  return { authState, authenticate, user, logout };
 };

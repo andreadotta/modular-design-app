@@ -1,6 +1,6 @@
 import { getUsers, User } from '@/modules/users';
 import { isRight } from '@/shared/utils/either';
-import UsersScreen from '@/screens/users/user-screen';
+import UsersScreen from '@/components/containers/users/user-screen';
 import { getCountryFromCoordinates } from '@/modules/geo';
 
 async function fetchInitialData(): Promise<User[]> {

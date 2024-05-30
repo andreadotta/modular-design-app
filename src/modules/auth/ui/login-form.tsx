@@ -1,47 +1,44 @@
-// src/components/LoginForm.tsx
 import { TextField, Box, Typography, Button } from '@mui/material';
+import { useForm, SubmitHandler } from 'react-hook-form';
 
-type LoginFormProps = {
+type FormData = {
   email: string;
   password: string;
-  loading: boolean;
-  error: string | null;
-  onEmailChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onPasswordChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: (event: React.FormEvent) => void;
 };
 
-const LoginForm = ({
-  email,
-  password,
-  loading,
-  error,
-  onEmailChange,
-  onPasswordChange,
-  onSubmit,
-}: LoginFormProps) => {
+type LoginFormProps = {
+  loading: boolean;
+  error: string | null;
+  onSubmit: (data: FormData) => void;
+};
+
+const LoginForm = ({ loading, error, onSubmit }: LoginFormProps) => {
+  const { register, handleSubmit } = useForm<FormData>();
+
+  const onSubmitHandler: SubmitHandler<FormData> = (data) => {
+    onSubmit(data);
+  };
+
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
         Login
       </Typography>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={handleSubmit(onSubmitHandler)}>
         <TextField
           label="Email"
           type="email"
-          value={email}
-          onChange={onEmailChange}
           fullWidth
           required
+          {...register('email')}
         />
         <TextField
           label="Password"
           type="password"
-          value={password}
-          onChange={onPasswordChange}
           fullWidth
           required
           sx={{ marginTop: 2 }}
+          {...register('password')}
         />
         {error && (
           <Typography color="error" variant="body2" sx={{ marginTop: 2 }}>
@@ -58,6 +55,11 @@ const LoginForm = ({
         >
           {loading ? 'Loading...' : 'Login'}
         </Button>
+        <div>
+          <p>
+            <small>use: Sincere@april.biz</small>
+          </p>
+        </div>
       </form>
     </Box>
   );

@@ -1,4 +1,4 @@
-// src/components/Sidebar.js
+'use client';
 import React from 'react';
 import {
   List,
@@ -9,12 +9,20 @@ import {
   Toolbar,
   ListItemIcon,
 } from '@mui/material';
-import { Home as HomeIcon, People as PeopleIcon } from '@mui/icons-material';
+import {
+  Home as HomeIcon,
+  People as PeopleIcon,
+  Login,
+  Logout,
+} from '@mui/icons-material';
 import Link from 'next/link';
+import { useAuth } from '@/auth';
 
 const drawerWidth = 240;
 
 const Sidebar = () => {
+  const { user, logout } = useAuth();
+
   return (
     <Drawer
       variant="permanent"
@@ -34,18 +42,33 @@ const Sidebar = () => {
       </Toolbar>
       <Divider />
       <List>
-        <ListItem button component={Link} href="/">
+        <ListItem component={Link} href="/">
           <ListItemIcon>
             <HomeIcon />
           </ListItemIcon>
           <ListItemText primary="Home" />
         </ListItem>
-        <ListItem button component={Link} href="/users">
+        <ListItem component={Link} href="/users">
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
           <ListItemText primary="User List" />
         </ListItem>
+        {user ? (
+          <ListItem button onClick={logout}>
+            <ListItemIcon>
+              <Logout />
+            </ListItemIcon>
+            <ListItemText primary="Logout" />
+          </ListItem>
+        ) : (
+          <ListItem component={Link} href="/auth">
+            <ListItemIcon>
+              <Login />
+            </ListItemIcon>
+            <ListItemText primary="Login" />
+          </ListItem>
+        )}
       </List>
     </Drawer>
   );
