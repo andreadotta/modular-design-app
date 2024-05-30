@@ -1,6 +1,6 @@
 import { getUsers, User } from '@/modules/users';
 import { isRight } from '@/shared/utils/either';
-import UsersScreen from '@/components/containers/users/user-screen';
+import UsersContainer from '@/components/containers/users/user-container';
 import { getCountryFromCoordinates } from '@/modules/geo';
 
 async function fetchInitialData(): Promise<User[]> {
@@ -26,5 +26,5 @@ export const revalidate = 900;
 
 export default async function Page() {
   const initialData = await fetchInitialData();
-  return <UsersScreen initialData={initialData} />;
+  return <UsersContainer initialData={initialData} />;
 }
