@@ -1,7 +1,5 @@
 # README
 
-Summary
-
 ##
 
 # Modular design front-end app
@@ -520,7 +518,7 @@ export const userAdapter = (
 
 Custom hooks also receive services as parameters, ensuring that the logic for fetching and managing state can be tested independently.
 
-```plain
+```typescript
 export const useUsers = (
   geoService: (lat: string, lon: string) => TaskEither<Error, string>,
 ): UserState & { fetchData: () => void } => {
@@ -555,7 +553,7 @@ export const useUsers = (
 
 During tests, we can pass a mock implementation of the service to verify the component’s behavior.
 
-```plain
+```typescript
 const mockGeoService = (lat: string, lon: string): TaskEither<Error, string> => {
   return taskEither(() =>
     Promise.resolve(
@@ -590,8 +588,8 @@ describe('UserService', () => {
 
 In the real case, the page passes the actual geolocation service when calling the user service.
 
-```javascript
-async function fetchInitialData(): Promise<ValidatedUser[]> {
+```typescript
+async function fetchInitialData(): Promise<User[]> {
   const result = await getUsers(getCountryFromCoordinates)();
   console.log('User page', 'fetchInitialData');
   const data = isRight(result) ? result.value : [];
@@ -623,7 +621,7 @@ The Service Layer acts as an intermediary between the presentation layer and ext
 
 **`src/app/users/page.tsx`**
 
-```javascript
+```typescript
 import { getUsers } from '@/users/services/get-users';
 import { ValidatedUser } from '@/users/types/user';
 import { isRight } from '@/shared/utils/either';
@@ -706,8 +704,6 @@ const UsersContainer = ({ initialData }: UsersPageContainerProps) => {
 };
 
 export default UsersContainer;
-
-
 ```
 
 In this example, the UsersContainer component is responsible for:
@@ -716,7 +712,10 @@ In this example, the UsersContainer component is responsible for:
 - Coordinating the rendering of the **`UserList`** component by passing user data and loading state as props.
 - Handling the refresh event to update user data through the **`handleRefresh`** function.
 - Orchestrating the user interface layout by placing the **`UserList`** component and the refresh button in the desired position.
--
+
+#### Important Note
+
+The container should never directly manipulate types or perform business actions, but should only orchestrate. State management and business actions should be handled through hooks.
 
 ### **Build-Time Page Generation and Client-Side Updates**
 
@@ -728,7 +727,7 @@ User pages are generated at build time using Next.js. This means that when the s
 
 ### **Code Example**
 
-```javascript
+```typescript
 async function fetchInitialData(): Promise<ValidatedUser[]> {
   const result = await getUsers()();
   console.log('User page', 'fetchInitialData');
