@@ -1,32 +1,29 @@
 'use client';
-
-import Sidebar from '@/components/sidebar/ui';
-import StyledBox from '@/design-system/box/styled-box';
+import React from 'react';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
 import theme from '@/theme';
-import { Box, Container, ThemeProvider } from '@mui/material';
-import { Head, Html } from 'next/document';
-import { Inter } from 'next/font/google';
+import { AuthProvider } from '@/auth';
 
-const inter = Inter({ subsets: ['latin'] });
-
-export default function MainLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html>
+    <html lang="en">
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>My App</title>
       </head>
       <body>
-        <ThemeProvider theme={theme}>
-          <Container maxWidth="lg" sx={{ display: 'flex' }}>
-            <Sidebar />
-            <StyledBox component="main">{children}</StyledBox>
-          </Container>
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            {children}
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

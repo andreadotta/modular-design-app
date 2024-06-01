@@ -19,7 +19,7 @@
     ],
     "paths": {
       "@/shared/*": ["./src/shared/*"],
-      "@/screens/*": ["./src/components/screens/*"],
+      "@/containers/*": ["./src/components/containers/*"],
       "@/users": ["./src/modules/users/index"],
       "@/geo": ["./src/modules/geo/index"],
       "@/auth": ["./src/modules/auth/index"],

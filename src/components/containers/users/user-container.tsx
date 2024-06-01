@@ -1,16 +1,16 @@
 'use client';
 import { useState } from 'react';
 import { isRight } from '@/shared/utils/either';
-import { Box, Toolbar, Button } from '@mui/material';
+import { Box, Toolbar } from '@mui/material';
 import { getCountryFromCoordinates } from '@/geo';
 import { getUsers, User, UsersList } from '@/users';
 import CustomButton from '@/design-system/buttons/custom-button';
 
-export type UsersPageProps = {
+export type UsersPageContainerProps = {
   initialData: User[];
 };
 
-const UsersScreen = ({ initialData }: UsersPageProps) => {
+const UsersContainer = ({ initialData }: UsersPageContainerProps) => {
   const [data, setData] = useState<User[]>(initialData);
   const [loading, setLoading] = useState(false);
 
@@ -48,4 +48,4 @@ const UsersScreen = ({ initialData }: UsersPageProps) => {
   );
 };
 
-export default UsersScreen;
+export default UsersContainer;

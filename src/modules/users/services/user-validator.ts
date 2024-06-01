@@ -1,5 +1,6 @@
 import { Either, right, left } from '@/shared/utils/either';
 import { userSchema, User, ValidatedUser } from '../types/user';
+import { ErrorMessage } from '@/shared/components/error-message';
 
 export const userValidator = (input: User): Either<Error, User> => {
   const result = userSchema.safeParse(input);
@@ -10,6 +11,8 @@ export const userValidator = (input: User): Either<Error, User> => {
     const errorMessages = result.error.errors
       .map((err) => `${err.path.join('.')} - ${err.message}`)
       .join(', ');
-    return left(new Error(`Validation error: ${errorMessages}`));
+    return left(
+      new Error(ErrorMessage('Validation error') + ': ' + errorMessages),
+    );
   }
 };

@@ -1,11 +1,10 @@
 import type { ReactElement } from 'react';
-import { NextPageWithLayout } from './_app';
 import { Container, Box, Typography, Button } from '@mui/material';
 import Link from 'next/link';
-import MainLayout from './layout';
 import CustomButton from '@/design-system/buttons/custom-button';
+import MainLayout from './layout';
 
-const Home: NextPageWithLayout = () => {
+const Home = () => {
   return (
     <Container maxWidth="md" style={{ marginTop: '50px' }}>
       <Box textAlign="center">

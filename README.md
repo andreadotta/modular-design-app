@@ -1,3 +1,9 @@
+# README
+
+Summary
+
+##
+
 # Modular design front-end app
 
 A modular and scalable front-end application example developed using a component-driven approach. The project leverages React for UI management, TypeScript for functional business logic, and Next.js 14 for server-side rendering and routing. It incorporates principles of modular architecture to ensure maintainability and testability of the codebase.
@@ -20,90 +26,417 @@ A modular and scalable front-end application example developed using a component
 
 ### **Code Structure**
 
-We need to clearly distinguish three levels in our application: **Component**, **Application**, and **Design System**.
+We need to clearly distinguish three levels in our application: **Module**, **Application**, and **Presentation**
 
-1. **Component**:
-    - This level contains autonomous and reusable components that manage independent entities and aggregates.
-    - Components at this level are designed to be composed at higher levels.
+1. **Module**:
+   - This level contains autonomous and reusable components that manage independent entities and aggregates.
+   - Components at this level are designed to be composed at higher levels.
 2. **Application**:
-    - This level manages the overall application.
-    - Here, libraries like the Design System are used and customized.
-    - Any customizations to the Design System are done at this level, not at the level of individual components.
-    - Design System customizations are passed as props to the components that need them.
-3. **Design System**:
-    - A shared library that provides the base design and styles for the application.
-    - It is a shared dependency at the Application level.
-    - Specific customizations should be handled at the Application level and then propagated to the Components.
+   - This level manages the overall application.
+   - Here, libraries like the Design System are used and customized.
+   - Any customizations to the Design System are done at this level, not at the level of individual components.
+   - Design System customizations are passed as props to the components that need them.
+3. **Presentation (Design System)**:
+   - A shared library that provides the base design and styles for the application.
+   - It is a shared dependency at the Application level.
+   - Specific customizations should be handled at the Application level and then propagated to the Components.
 
 In summary, the Design System is a shared library, and any customization is managed at the Application level, not at the level of individual Components. This approach ensures that the Design System remains consistent and that customizations are centralized and easy to manage. In this project, we have chosen MUI (Material-UI) as our external Design System. Customizations will be done using styled components. This approach ensures that the Design System remains consistent and that customizations are centralized and easy to manage.
 
-### **Installation**
+## **Installation**
 
 1. Clone the repository:
 
-   ```bash
-   git clone https://github.com/your-username/ModularDesignApp.git
-   ```
+```plain
+git clone <https://github.com/andreadotta/modular-design-app.git>
+```
 
-2. Install dependencies:
+1. Install dependencies:
 
-   ```bash
-   cd ModularDesignApp
-   pnpm i
-   ```
+```bash
+cd ModularDesignApp
+pnpm i
+```
 
-3. Start the application:
+1. Start the application:
 
-   ```bash
-   pnpm run dev
-   ```
+```plain
+pnpm run dev
+```
 
-### **Contributing**
+## **Contributing**
 
-If you wish to contribute to the project, you are welcome! Follow these guidelines to ensure your contribution aligns with the project's goals.
+If you wish to contribute to the project, you are welcome! Follow these guidelines to ensure your contribution aligns with the project’s goals.
 
 1. Fork the repository.
 2. Create a branch for your feature or fix:
 
-   ```bash
-   git checkout -b feature/feature-name
-   ```
+```plain
+git checkout -b feature/feature-name
+```
 
-3. Commit your changes:
+1. Commit your changes:
 
-   ```bash
-   git commit -m 'Add new feature'
-   ```
+```plain
+git commit -m 'Add new feature'
+```
 
-4. Push the branch:
+1. Push the branch:
 
-   ```bash
-   git push origin feature/feature-names
-   ```
+```plain
+git push origin feature/feature-names
+```
 
-5. Open a Pull Request.
+1. Open a Pull Request.
 
-## **Component Structure**
+## **Module Structure**
 
 In our project, we adopt a modular approach where each component handles a single entity or aggregate. Each component has its flexible internal architecture, adaptable to specific needs.
 
-A component in our project can include various layers such as **`ui`**, **`hooks`**, **`services`**, and **`types`**. However, not all components must necessarily have all these layers. For example, a component might not have a **`ui`** folder if it doesn't require its own user interface, or it might not have a **`services`** folder if it doesn't need direct access to external data. In such cases, data can be passed directly via props from other components.
+The architecture is divided into modules containing domain-specific logic. Each module is responsible for a particular functionality of the application and includes contexts, services, types, and ui necessary for that functionality.
 
-### **Example Component Structure**
+#### Overview of Modules
 
-1. **src/components**:
-   - **(component name)**:
-     - **hooks**:
-       - Contains custom hooks for managing the component's state and business logic.
-     - **services**:
-       - Includes services to fetch, adapt, and validate the component's data. These services handle communication with external APIs and other data sources.
-     - **types**:
-       - Definitions of types and interfaces to correctly type the component's data.
-     - **ui**:
-       - Contains user interface components for displaying and interacting with the component's data.
-2. **src/shared**:
-   - **components**:
-     - Contains shared and generic components such as error messages and loading spinners that can be used across various parts of the application.
+1. **Contexts** (`contexts`): Manage global state and provide a way to share data and functions between components without explicitly passing props.
+2. **Hooks** (`hooks`): Contain reusable and custom business logic that can be shared across components.
+3. **Services** (`services`): Contain logic for API calls, data management, and other asynchronous operations.
+4. **Stores** (`stores`): Use state management libraries (e.g., Zustand) to maintain the application's state.
+5. **Types** (`types`): Define TypeScript types to improve type safety and code maintainability.
+6. **UI Components** (`ui`): Contain domain-specific user interface components.
+
+###
+
+#### Example of a Module
+
+#### Contexts (`contexts`)
+
+Contexts are used to manage global state and provide access and modification functions. They are created using React's `createContext` API and provided through a `Context.Provider`.
+
+**Example**:
+
+```typescript
+// src/modules/example/contexts/example-context.tsx
+import React, { createContext, useContext, ReactNode } from 'react';
+
+// Definizione del tipo di contesto
+type ExampleContextType = {
+  data: string;
+  setData: (data: string) => void;
+  clearData: () => void;
+};
+
+// Creazione del contesto
+const ExampleContext = createContext<ExampleContextType | undefined>(undefined);
+
+// Implementazione del provider
+export const ExampleProvider = ({ children }: { children: ReactNode }) => {
+  const { data, setData, clearData } = useExampleStore(); // Assunzione di un hook esistente
+
+  return (
+    <ExampleContext.Provider value={{ data, setData, clearData }}>
+      {children}
+    </ExampleContext.Provider>
+  );
+};
+```
+
+####
+
+#### Hooks (`hooks`)
+
+Hooks contain reusable business logic. They can be customized using React's `useState`, `useEffect`, and other hooks.
+
+**Example**:
+
+```typescript
+// src/modules/example/hooks/use-example-store.ts
+
+import { useState, useCallback, useEffect } from 'react';
+import { fetchExampleData } from '../services/example-service';
+import { useExampleStore } from '../stores/example-store';
+import { Either, isRight } from '@/shared/utils/either';
+
+type ExampleState = {
+  loading: boolean;
+  error: string | null;
+  data: any | null;
+};
+
+export const useExample = () => {
+  const [exampleState, setExampleState] = useState<ExampleState>({
+    loading: false,
+    error: null,
+    data: null,
+  });
+
+  const { exampleData, setExampleData, clearExampleData } = useExampleStore();
+
+  useEffect(() => {
+    setExampleState({
+      loading: false,
+      error: null,
+      data: exampleData,
+    });
+  }, [exampleData]);
+
+  const fetchData = useCallback(
+    async (id: string) => {
+      setExampleState({ loading: true, error: null, data: null });
+
+      const result: Either<Error, any> = await fetchExampleData(id)();
+
+      if (isRight(result)) {
+        const data = result.value;
+        setExampleData(data);
+        setExampleState({ loading: false, error: null, data });
+      } else {
+        setExampleState({
+          loading: false,
+          error: result.value.message,
+          data: null,
+        });
+      }
+    },
+    [setExampleData],
+  );
+
+  const clearData = useCallback(() => {
+    clearExampleData();
+    setExampleState({ loading: false, error: null, data: null });
+  }, [clearExampleData]);
+
+  return { exampleState, fetchData, clearData };
+};
+```
+
+####
+
+#### Services (`services`)
+
+Services handle API calls and other asynchronous operations. They are responsible for interacting with backends or other data sources, emphasizing the use of \`TaskEither\` for managing asynchronous workflows robustly.
+
+**Example**:
+
+```typescript
+// src/modules/users/services/users-service.ts
+
+import { isRight, right, left, Either, isLeft } from '@/shared/utils/either';
+import { taskEither, TaskEither } from '@/shared/utils/task-either';
+import { userAdapter } from './user-adapter';
+
+import { CountryFromCoordinates, User } from '../types/user';
+import { ErrorMessage } from '@/shared/components/error-message';
+import fetchData from '@/shared/utils/fetch-data';
+import { userValidator } from './user-validator';
+
+export const getUsers = (
+  geoService: CountryFromCoordinates,
+): TaskEither<Error, User[]> => {
+  const validateUsers = (users: User[]): Either<Error, User[]> => {
+    const validatedUsers = users.map(userValidator);
+    const errors = validatedUsers.filter(isLeft);
+    if (errors.length > 0) {
+      const errorMessages = errors
+        .map((err) => (err as { _tag: 'Left'; value: Error }).value.message)
+        .join('; ');
+      return left(new Error(ErrorMessage('Validation error') + errorMessages));
+    }
+    return right(
+      validatedUsers.map(
+        (result) => (result as { _tag: 'Right'; value: User }).value,
+      ),
+    );
+  };
+  const adapter = (
+    input: any,
+    geoService: CountryFromCoordinates,
+  ): TaskEither<Error, User[]> => {
+    const adaptTask: TaskEither<Error, User[]> = async () => {
+      try {
+        const users = input as any[];
+        const adaptedUsers = await Promise.all(
+          users.map(async (user) => {
+            const adaptedUser = await userAdapter(user, geoService)();
+            if (isRight(adaptedUser)) {
+              return adaptedUser.value;
+            }
+            throw new Error(adaptedUser.value.message);
+          }),
+        );
+        return right(adaptedUsers);
+      } catch (error) {
+        return left(
+          new Error(
+            ErrorMessage('Failed to adapt users') +
+              ': ' +
+              (error as Error).message,
+          ),
+        );
+      }
+    };
+
+    return taskEither(adaptTask);
+  };
+
+  return fetchData<User[]>(
+    'https://jsonplaceholder.typicode.com/users',
+    (input: any) => adapter(input, geoService),
+    validateUsers,
+    'GET',
+    {},
+  );
+};
+```
+
+####
+
+#### Stores (`stores`)
+
+Stores manage the application's state using libraries like Zustand. They allow state sharing between various components without passing props.
+
+**Example**:
+
+```typescript
+// src/modules/example/stores/example-store.ts
+
+import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
+
+type ExampleState = {
+  data: string;
+  setData: (data: string) => void;
+  clearData: () => void;
+};
+
+export const useExampleStore = create<ExampleState>()(
+  persist(
+    (set) => ({
+      data: '',
+      setData: (data) => set({ data }),
+      clearData: () => set({ data: '' }),
+    }),
+    {
+      name: 'example-storage', // nome del local storage
+      storage: createJSONStorage(() => localStorage),
+    },
+  ),
+);
+```
+
+####
+
+#### Types (`types`)
+
+Types define TypeScript interfaces and types to improve type safety and code maintainability.
+
+Example:
+
+```typescript
+// src/modules/auth/types/auth.ts
+
+import { z } from 'zod';
+
+/**
+ * Defines the schema for an authenticated user using zod.
+ * The schema is used for runtime type validation.
+ */
+export const AuthUserSchema = z.object({
+  id: z.number(), // The user's ID, must be a number
+  email: z.string().email(), // The user's email, must be a string formatted as an email
+});
+
+/**
+ * Defines the schema for the authentication response using zod.
+ * Includes information on whether the authentication was successful, the user, and a possible error message.
+ */
+export const AuthResponseSchema = z.object({
+  success: z.boolean(), // Indicates if authentication was successful, must be a boolean
+  user: AuthUserSchema.optional(), // The authenticated user, can be optional
+  error: z.string().optional(), // A possible error message, can be optional
+});
+
+// TypeScript types derived from the zod schemas, for use in the rest of the TypeScript code
+export type AuthUser = z.infer<typeof AuthUserSchema>; // Type for the authenticated user
+export type AuthResponse = z.infer<typeof AuthResponseSchema>; // Type for the authentication response
+```
+
+####
+
+#### UI Components (`ui`)
+
+UI components within modules manage state and validation or data display logic. They use libraries like `react-hook-form` for forms or `material-ui` for data grids. They provide callback functions to handle user interactions, such as `onSubmit` for forms or `onRowClick` for data grids. They implement basic validation logic and display errors or messages directly within the components.
+
+**Example**:
+
+```typescript
+// src/modules/example/ui/ExampleForm.tsx
+
+import { TextField, Box, Typography, Button } from '@mui/material';
+import { useForm, SubmitHandler } from 'react-hook-form';
+
+// Define the form data type
+type FormData = {
+  name: string; // The name field, must be a string
+  age: number;  // The age field, must be a number
+};
+
+// Define the props for the ExampleForm component
+type ExampleFormProps = {
+  onSubmit: (data: FormData) => void; // The submit handler function
+};
+
+// The ExampleForm component
+const ExampleForm = ({ onSubmit }: ExampleFormProps) => {
+  // Initialize the form using react-hook-form
+  const { register, handleSubmit } = useForm<FormData>();
+
+  // Define the submit handler function
+  const onSubmitHandler: SubmitHandler<FormData> = (data) => {
+    // Call the onSubmit function passed as a prop with the form data
+    onSubmit(data);
+  };
+
+  return (
+    <Box>
+      <Typography variant="h4" gutterBottom>
+        Example Form
+      </Typography>
+      <form onSubmit={handleSubmit(onSubmitHandler)}>
+        <TextField
+          label="Name"
+          type="text"
+          fullWidth
+          required
+          {...register('name')} // Register the name field with react-hook-form
+        />
+        <TextField
+          label="Age"
+          type="number"
+          fullWidth
+          required
+          sx={{ marginTop: 2 }}
+          {...register('age')} // Register the age field with react-hook-form
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          sx={{ marginTop: 2 }}
+        >
+          Submit
+        </Button>
+      </form>
+    </Box>
+  );
+};
+
+export default ExampleForm;
+```
+
+This modular architecture and use of container components as orchestrators make the project easily extendable and maintainable. The modules contain domain-specific logic, while the containers centralize the application's flow logic, allowing for clear separation of concerns and facilitating code reusability.
+
+###
 
 ### **Design Patterns Used**
 
@@ -111,7 +444,7 @@ A component in our project can include various layers such as **`ui`**, **`hooks
 
 In this mini project, we adopt a Component-Based Design approach. Each component is designed to be autonomous and independent. Components are reusable units that encapsulate the logic, state, and user interface necessary to manage a specific entity or aggregate. Each component has its flexible internal architecture that can include various layers such as hooks, services, types, and user interface. This approach ensures that components can be developed, tested, and maintained in isolation, reducing dependencies between different parts of the application.
 
-For example, the **_ui_** folder of a component contains the part specific to managing the user interface, while the **_services_** folder includes the logic for data access and API calls. The **_hooks_** folder manages the component's state and business logic, and the **_types_** folder defines the types and interfaces to ensure the correct typing of data. In this way, each component remains focused on its own responsibility, respecting the Single Responsibility Principle and facilitating reusability in different parts of the application.
+For example, the **_ui_** folder of a component contains the part specific to managing the user interface, while the **_services_** folder includes the logic for data access and API calls. The **_hooks_** folder manages the component’s state and business logic, and the **_types_** folder defines the types and interfaces to ensure the correct typing of data. In this way, each component remains focused on its own responsibility, respecting the Single Responsibility Principle and facilitating reusability in different parts of the application.
 
 **Separation of Concerns**:
 
@@ -129,25 +462,11 @@ Each component and service is responsible for a single functionality or aggregat
 
 The data access logic is encapsulated in a service layer, clearly separating API calls from presentation logic. This approach facilitates the maintenance and updating of services without impacting the rest of the application. For example, **`get-users.ts`** handles API calls to fetch user data.
 
-### **Implementation Example**
-
-**Users**
-
-- **src/components/users/hooks**:
-  - **`use-users.ts`**: Custom hook to manage user state.
-- **src/components/users/services**:
-  - **`get-users.ts`**: Service to fetch user data.
-  - **`user-adapter.ts`**: Adapter for user data.
-  - **`user-validator.ts`**: Validator for user data.
-- **src/components/users/types**:
-  - **`user.ts`**: Type definitions for users.
-- **src/components/users/ui**:
-  - **`user-components.tsx`**: UI components for managing users.
-  - **`users-screen.tsx`**: Main screen for displaying users.
-
 **Dependency Management Between Components**
 
 Dependency injection is crucial for maintaining a modular and testable architecture. This approach allows components to receive external services as parameters, rather than creating them directly, making the code more flexible and easier to test.
+
+###
 
 ### **Principles of Dependency Injection**
 
@@ -155,15 +474,13 @@ Dependency injection offers several advantages:
 
 - **Decoupling**: Reduces rigid dependencies between components, making the code more modular.
 - **Testability**: Facilitates unit testing since dependencies can be easily replaced with mocks or stubs.
-- **Flexibility**: Allows changing the implementations of dependencies without modifying the component's code.
+- **Flexibility**: Allows changing the implementations of dependencies without modifying the component’s code.
 
-### **Use Case: Adapter Utilizing an Injected Dependency**
+#### **Use Case: Adapter Utilizing an Injected Dependency**
 
 In our application, we use dependency injection to adapt user data with geographic information. The user adapter accepts an external service function as a parameter, which is used to fetch the country from geographic coordinates.
 
-### **Adapter Implementation**
-
-```tsx
+```typescript
 const adaptUser = async (
   input: any,
   geoService: (lat: string, lon: string) => TaskEither<Error, string>,
@@ -197,11 +514,13 @@ export const userAdapter = (
 };
 ```
 
+###
+
 ### **Custom Hook**
 
 Custom hooks also receive services as parameters, ensuring that the logic for fetching and managing state can be tested independently.
 
-```tsx
+```plain
 export const useUsers = (
   geoService: (lat: string, lon: string) => TaskEither<Error, string>,
 ): UserState & { fetchData: () => void } => {
@@ -230,12 +549,13 @@ export const useUsers = (
 };
 ```
 
+###
+
 ### **Test Example**
 
-During tests, we can pass a mock implementation of the service to verify the component's behavior.
+During tests, we can pass a mock implementation of the service to verify the component’s behavior.
 
-```tsx
-
+```plain
 const mockGeoService = (lat: string, lon: string): TaskEither<Error, string> => {
   return taskEither(() =>
     Promise.resolve(
@@ -261,13 +581,16 @@ describe('UserService', () => {
   });
 });
 
+
 ```
+
+###
 
 ### **Real Implementation in the Page**
 
 In the real case, the page passes the actual geolocation service when calling the user service.
 
-```tsx
+```javascript
 async function fetchInitialData(): Promise<ValidatedUser[]> {
   const result = await getUsers(getCountryFromCoordinates)();
   console.log('User page', 'fetchInitialData');
@@ -277,6 +600,8 @@ async function fetchInitialData(): Promise<ValidatedUser[]> {
 ```
 
 This way, dependency injection allows components to be more modular, easily testable, and flexible, improving the overall architecture of the application.
+
+##
 
 ## **Service Layer**
 
@@ -292,23 +617,13 @@ The Service Layer acts as an intermediary between the presentation layer and ext
 - **Data Adaptation**: Transforming raw data into a format usable by the application.
 - **Data Validation**: Ensuring the integrity and correctness of data before using or saving it.
 
-### **Screens**
-
-"Screens" are React components that represent the main pages or views of the application. They are responsible for orchestrating the presentation logic, managing local state, and coordinating interactions between child components.
-
-The main responsibilities of "Screens" are:
-
-- **Orchestration of child components**: Screens compose various child components to create the complete user interface of the page or view. They determine which components should be displayed and how they should be arranged.
-- **Local state management**: Screens manage the local state of the page or view, such as the data to be displayed, the loading state, etc. These states are then passed to the child components as props.
-- **Coordination of interactions**: Screens coordinate interactions between child components, such as handling events, updating data, and communicating between components.
-- **Data fetching**: Often, Screens are responsible for fetching the data needed for the page or view, such as invoking APIs or reading data from the application context.
-- **Conditional rendering**: Screens can handle the conditional rendering of certain parts of the user interface based on the application state or available data.
+###
 
 ### **Implementation Example**
 
 **`src/app/users/page.tsx`**
 
-```tsx
+```javascript
 import { getUsers } from '@/users/services/get-users';
 import { ValidatedUser } from '@/users/types/user';
 import { isRight } from '@/shared/utils/either';
@@ -333,30 +648,42 @@ export default async function Page() {
 }
 ```
 
-**`src/components/screens/users/users-screen.tsx`**
+## **Containers**
 
-This component represents the main users' page. It manages the state of user data, data loading, and coordinates the child components to display the user list.
+“Containers” are React components that represent the main pages or views of the application. They are responsible for orchestrating the presentation logic, managing local state, and coordinating interactions between child components.
 
-```tsx
+The main responsibilities of “Containers” are:
+
+- **Orchestration of child components**: Containers compose various child components to create the complete user interface of the page or view. They determine which components should be displayed and how they should be arranged.
+- **Local state management**: Screens uses hooks to manage the local state of the page or view, such as the data to be displayed, the loading state, etc. These states are then passed to the child components as props.
+- **Coordination of interactions**: Containers coordinate interactions between child components, such as handling events, updating data, and communicating between components.
+- **Data fetching**: Often, Containers are responsible for fetching the data needed for the page or view, such using service layer to invoking APIs or using hooks to reading data from the application context.
+- **Conditional rendering**: Containers can handle the conditional rendering of certain parts of the user interface based on the application state or available data.
+
+### **Implementation Example**
+
+**`src/components/containers/users/users-container.tsx`**
+
+This component represents the main users’ page. It manages the state of user data, data loading, and coordinates the child components to display the user list.
+
+```typescript
 'use client';
 
-import React, { useState } from 'react';
-import { getUsers } from '@/users/services/get-users';
-import { ValidatedUser } from '@/users/types/user';
+import { useState } from 'react';
 import { isRight } from '@/shared/utils/either';
-import UserList from '@/components/users/ui/UserList';
-import { Box, Toolbar, Button } from '@mui/material';
-import { getCountryFromCoordinates } from '@/components/geo/service/get-service';
+import { Box, Toolbar } from '@mui/material';
+import { getCountryFromCoordinates } from '@/geo';
+import { getUsers, User, UsersList } from '@/users';
+import CustomButton from '@/design-system/buttons/custom-button';
 
-export type UsersPageProps = {
-  initialData: ValidatedUser[];
+export type UsersPageContainerProps = {
+  initialData: User[];
 };
 
-const UsersScreen = ({ initialData }: UsersPageProps) => {
-  const [data, setData] = useState<ValidatedUser[]>(initialData);
+const UsersContainer = ({ initialData }: UsersPageContainerProps) => {
+  const [data, setData] = useState<User[]>(initialData);
   const [loading, setLoading] = useState(false);
 
-  // Function to refresh user data
   const handleRefresh = async () => {
     setLoading(true);
     const result = await getUsers(getCountryFromCoordinates)();
@@ -368,39 +695,51 @@ const UsersScreen = ({ initialData }: UsersPageProps) => {
 
   return (
     <div>
-      <UserList data={data} loading={loading} />
       <Box display="flex" justifyContent="space-between" alignItems="center">
+        <h1>Users List</h1>
         <Toolbar>
-          <Button variant="contained" color="primary" onClick={handleRefresh}>
+          <CustomButton
+            variant="contained"
+            color="primary"
+            onClick={handleRefresh}
+          >
             Refresh
-          </Button>
+          </CustomButton>
         </Toolbar>
       </Box>
+      <UsersList
+        data={data}
+        loading={loading}
+        fnTest={() => {
+          console.log('ciao');
+        }}
+      />
     </div>
   );
 };
 
-export default UsersScreen;
+export default UsersContainer;
 ```
 
-In this example, the **`UsersScreen`** component is responsible for:
+In this example, the UsersContainer component is responsible for:
 
 - Managing the local state of user data (**`data`**) and loading state (**`loading`**).
 - Coordinating the rendering of the **`UserList`** component by passing user data and loading state as props.
 - Handling the refresh event to update user data through the **`handleRefresh`** function.
 - Orchestrating the user interface layout by placing the **`UserList`** component and the refresh button in the desired position.
+-
 
 ### **Build-Time Page Generation and Client-Side Updates**
 
 In our project, we use a combination of build-time page generation and client-side updates to keep user data up-to-date. This approach allows us to benefit from both the performance of static generation and the flexibility of dynamic updates. Here is a detailed description of the mechanism used:
 
-### **Build-Time Page Generation**
+### **Build-Time Page Generation the "Page"**
 
 User pages are generated at build time using Next.js. This means that when the site is built, user data is fetched once and used to generate the HTML page. To ensure that the data does not become outdated, we mention here that we use a revalidation mechanism that reloads the data periodically.
 
 ### **Code Example**
 
-```tsx
+```javascript
 async function fetchInitialData(): Promise<ValidatedUser[]> {
   const result = await getUsers()();
   console.log('User page', 'fetchInitialData');
@@ -419,44 +758,11 @@ export default async function Page() {
 }
 ```
 
+###
+
 ### **Client-Side Updates**
 
 For dynamic data updates, we use a combination of **`useState`**, **`useEffect`**, and **`useCallback`** in a custom hook called **`useUsers`**. This allows us to keep the data updated on the client and reflect any changes in real-time.
-
-### **Code Example**
-
-```tsx
-type UserState = {
-  loading: boolean;
-  error: string | null;
-  data: ValidatedUser[] | null;
-};
-
-export const useUsers = (): UserState & { fetchData: () => void } => {
-  const [state, setState] = useState<UserState>({
-    loading: true,
-    error: null,
-    data: null,
-  });
-
-  const fetchData = useCallback(async () => {
-    setState((prevState) => ({ ...prevState, loading: true }));
-    const result = await getUsers()();
-
-    if (isLeft(result)) {
-      setState({ loading: false, error: result.value.message, data: null });
-    } else if (isRight(result)) {
-      setState({ loading: false, error: null, data: result.value });
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  return { ...state, fetchData };
-};
-```
 
 ### **Description of the Mechanism**
 
@@ -470,22 +776,19 @@ In our project, we use a revalidation mechanism to ensure that user data is regu
 
 To configure this, we have implemented the following in our code:
 
-```tsx
+```cpp
 export const revalidate = 900; // Revalidate every 15 minutes
 ```
 
 Additionally, we specify the Node.js runtime environment in our **`next.config.mjs`** file to ensure that our server-side code runs efficiently. This configuration is necessary for the revalidation to work properly in a server-side context:
 
-```jsx
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+```typescript
+/** @type {import('next').NextConfig} */const nextConfig = {
+  const nextConfig = {
   serverRuntimeConfig: {
     // Will only be available on the server side
     runtime: 'nodejs',
   },
-};
-
-export default nextConfig;
 ```
 
 By setting **`runtime: 'nodejs'`**, we ensure that our application leverages the Node.js runtime environment, which is optimized for server-side operations, including data fetching and revalidation. This configuration is crucial for maintaining performance and reliability in our data handling processes.

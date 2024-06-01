@@ -1,36 +1,88 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { authenticateUser } from '../services/auth-service';
-import { AuthResponse, AuthUser } from '../types/auth';
-import { isRight } from '@/shared/utils/either';
+import { useAuthStore } from '../stores/auth-store';
+import { AuthResponse } from '../types/auth';
+import { Either, isRight } from '@/shared/utils/either';
 
 type AuthState = {
   loading: boolean;
   error: string | null;
-  user: AuthUser | null;
+  authenticated: boolean;
 };
 
 export const useAuth = () => {
   const [authState, setAuthState] = useState<AuthState>({
     loading: false,
     error: null,
-    user: null,
+    authenticated: false,
   });
 
-  const authenticate = useCallback(async (email: string) => {
-    setAuthState({ loading: true, error: null, user: null });
+  const { user, accessToken, setUser, setAccessToken, clearAuth } =
+    useAuthStore();
 
-    const result = await authenticateUser(email)();
-
-    if (isRight(result)) {
+  useEffect(() => {
+    if (user && accessToken) {
       setAuthState({
         loading: false,
         error: null,
-        user: result.value.user || null,
+        authenticated: true,
       });
     } else {
-      setAuthState({ loading: false, error: result.value.message, user: null });
+      setAuthState({
+        loading: false,
+        error: null,
+        authenticated: false,
+      });
     }
-  }, []);
+  }, [user, accessToken]);
 
-  return { authState, authenticate };
+  const authenticate = useCallback(
+    async (credentials: { email: string; password: string }) => {
+      setAuthState({ loading: true, error: null, authenticated: false });
+
+      const result: Either<Error, AuthResponse> = await authenticateUser(
+        credentials.email,
+      )();
+
+      if (isRight(result)) {
+        const { user } = result.value;
+        const token = 'dummy-token'; // fake token!!!!
+
+        if (user && token) {
+          setUser(user);
+          setAccessToken(token);
+
+          setAuthState({
+            loading: false,
+            error: null,
+            authenticated: true,
+          });
+        } else {
+          setAuthState({
+            loading: false,
+            error: 'Invalid user or token',
+            authenticated: false,
+          });
+        }
+      } else {
+        setAuthState({
+          loading: false,
+          error: result.value.message,
+          authenticated: false,
+        });
+      }
+    },
+    [setUser, setAccessToken],
+  );
+
+  const logout = useCallback(() => {
+    clearAuth();
+    setAuthState({
+      loading: false,
+      error: null,
+      authenticated: false,
+    });
+  }, [clearAuth]);
+
+  return { authState, authenticate, logout };
 };

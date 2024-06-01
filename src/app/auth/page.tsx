@@ -1,12 +1,5 @@
-import AuthScreen from '@/components/screens/auth/auth-screen';
-import React from 'react';
+import AuthContainer from '@/containers/auth/auth-container';
 
-const AuthPage = () => {
-  return (
-    <div>
-      <AuthScreen />
-    </div>
-  );
-};
-
-export default AuthPage;
+export default function LoginPage() {
+  return <AuthContainer />;
+}
