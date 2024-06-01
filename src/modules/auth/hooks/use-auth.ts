@@ -1,47 +1,78 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { authenticateUser } from '../services/auth-service';
-import { AuthUser } from '../types/auth';
-import { isRight } from '@/shared/utils/either';
-import { useAuthStore } from '@/stores/auth-store';
+import { useAuthStore } from '../stores/auth-store';
+import { AuthResponse } from '../types/auth';
+import { Either, isRight } from '@/shared/utils/either';
 
 type AuthState = {
   loading: boolean;
   error: string | null;
-  user: AuthUser | null;
+  authenticated: boolean;
 };
 
 export const useAuth = () => {
   const [authState, setAuthState] = useState<AuthState>({
     loading: false,
     error: null,
-    user: null,
+    authenticated: false,
   });
 
-  const { user, setUser, clearAuth } = useAuthStore();
+  const { user, accessToken, setUser, setAccessToken, clearAuth } =
+    useAuthStore();
+
+  useEffect(() => {
+    if (user && accessToken) {
+      setAuthState({
+        loading: false,
+        error: null,
+        authenticated: true,
+      });
+    } else {
+      setAuthState({
+        loading: false,
+        error: null,
+        authenticated: false,
+      });
+    }
+  }, [user, accessToken]);
 
   const authenticate = useCallback(
-    async (email: string) => {
-      setAuthState({ loading: true, error: null, user: null });
+    async (credentials: { email: string; password: string }) => {
+      setAuthState({ loading: true, error: null, authenticated: false });
 
-      const result = await authenticateUser(email)();
+      const result: Either<Error, AuthResponse> = await authenticateUser(
+        credentials.email,
+      )();
 
       if (isRight(result)) {
-        const authenticatedUser = result.value.user || null;
-        setAuthState({
-          loading: false,
-          error: null,
-          user: authenticatedUser,
-        });
-        setUser(authenticatedUser);
+        const { user } = result.value;
+        const token = 'dummy-token'; // fake token!!!!
+
+        if (user && token) {
+          setUser(user);
+          setAccessToken(token);
+
+          setAuthState({
+            loading: false,
+            error: null,
+            authenticated: true,
+          });
+        } else {
+          setAuthState({
+            loading: false,
+            error: 'Invalid user or token',
+            authenticated: false,
+          });
+        }
       } else {
         setAuthState({
           loading: false,
           error: result.value.message,
-          user: null,
+          authenticated: false,
         });
       }
     },
-    [setUser],
+    [setUser, setAccessToken],
   );
 
   const logout = useCallback(() => {
@@ -49,9 +80,9 @@ export const useAuth = () => {
     setAuthState({
       loading: false,
       error: null,
-      user: null,
+      authenticated: false,
     });
   }, [clearAuth]);
 
-  return { authState, authenticate, user, logout };
+  return { authState, authenticate, logout };
 };

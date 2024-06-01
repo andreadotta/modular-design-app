@@ -1,7 +1,5 @@
-// src/contexts/AuthContext.tsx
 import React, { createContext, useContext, ReactNode } from 'react';
-import { useAuthStore } from '@/stores/auth-store';
-import { AuthUser } from '@/auth';
+import { AuthUser, useAuthStore } from '@/auth';
 
 type AuthContextType = {
   accessToken: string | null;
@@ -29,12 +27,4 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
 };

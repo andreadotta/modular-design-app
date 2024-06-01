@@ -1,14 +1,30 @@
-import { Either, isRight, isLeft, right, left } from '@/shared/utils/either';
+import { isRight, right, left, Either, isLeft } from '@/shared/utils/either';
 import { taskEither, TaskEither } from '@/shared/utils/task-either';
 import { userAdapter } from './user-adapter';
-import { userValidator } from './user-validator';
+
 import { CountryFromCoordinates, User } from '../types/user';
 import { ErrorMessage } from '@/shared/components/error-message';
 import fetchData from '@/shared/utils/fetch-data';
+import { userValidator } from './user-validator';
 
 export const getUsers = (
   geoService: CountryFromCoordinates,
 ): TaskEither<Error, User[]> => {
+  const validateUsers = (users: User[]): Either<Error, User[]> => {
+    const validatedUsers = users.map(userValidator);
+    const errors = validatedUsers.filter(isLeft);
+    if (errors.length > 0) {
+      const errorMessages = errors
+        .map((err) => (err as { _tag: 'Left'; value: Error }).value.message)
+        .join('; ');
+      return left(new Error(ErrorMessage('Validation error') + errorMessages));
+    }
+    return right(
+      validatedUsers.map(
+        (result) => (result as { _tag: 'Right'; value: User }).value,
+      ),
+    );
+  };
   const adapter = (
     input: any,
     geoService: CountryFromCoordinates,
@@ -28,27 +44,16 @@ export const getUsers = (
         return right(adaptedUsers);
       } catch (error) {
         return left(
-          new Error('Failed to adapt users: ' + (error as Error).message),
+          new Error(
+            ErrorMessage('Failed to adapt users') +
+              ': ' +
+              (error as Error).message,
+          ),
         );
       }
     };
 
     return taskEither(adaptTask);
-  };
-  const validateUsers = (users: User[]): Either<Error, User[]> => {
-    const validatedUsers = users.map(userValidator);
-    const errors = validatedUsers.filter(isLeft);
-    if (errors.length > 0) {
-      const errorMessages = errors
-        .map((err) => (err as { _tag: 'Left'; value: Error }).value.message)
-        .join('; ');
-      return left(new Error(ErrorMessage('Validation error') + errorMessages));
-    }
-    return right(
-      validatedUsers.map(
-        (result) => (result as { _tag: 'Right'; value: User }).value,
-      ),
-    );
   };
 
   return fetchData<User[]>(

@@ -1,7 +1,8 @@
 import { getUsers, User } from '@/modules/users';
 import { isRight } from '@/shared/utils/either';
-import UsersContainer from '@/components/containers/users/user-container';
+
 import { getCountryFromCoordinates } from '@/modules/geo';
+import UsersContainer from '@/containers/users/user-container';
 
 async function fetchInitialData(): Promise<User[]> {
   const result = await getUsers(getCountryFromCoordinates)();

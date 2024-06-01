@@ -1,29 +1,25 @@
 'use client';
 
 import { LoginForm, useAuth } from '@/auth';
-import { useAuthStore } from '@/stores/auth-store';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 const AuthContainer = () => {
-  const { authState, authenticate } = useAuth();
-  const { setUser, setAccessToken } = useAuthStore();
   const router = useRouter();
+  const { authState, authenticate } = useAuth();
 
   useEffect(() => {
-    if (authState.user) {
+    if (authState.authenticated) {
       console.log('User authenticated, updating store...');
-      setUser(authState.user);
-      const accessToken = 'dummy-access-token';
-      setAccessToken(accessToken);
-      // Call the onLoginSuccess callback
       router.push('/');
     }
-  }, [authState.user, setUser, setAccessToken, router]);
+  }, [authState.authenticated, router]);
 
-  const handleSubmit = async (data: { email: string; password: string }) => {
-    await authenticate(data.email);
-    console.log(data.email);
+  const handleSubmit = async (credentials: {
+    email: string;
+    password: string;
+  }) => {
+    await authenticate(credentials);
   };
 
   return (

@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   List,
   ListItem,
@@ -21,7 +21,12 @@ import { useAuth } from '@/auth';
 const drawerWidth = 240;
 
 const Sidebar = () => {
-  const { user, logout } = useAuth();
+  const { authState, logout } = useAuth();
+  const [authenticated, setAuthenticated] = useState(authState.authenticated);
+
+  useEffect(() => {
+    setAuthenticated(authState.authenticated);
+  }, [authState.authenticated]);
 
   return (
     <Drawer
@@ -54,8 +59,8 @@ const Sidebar = () => {
           </ListItemIcon>
           <ListItemText primary="User List" />
         </ListItem>
-        {user ? (
-          <ListItem button onClick={logout}>
+        {authenticated ? (
+          <ListItem component={Link} onClick={logout} href="">
             <ListItemIcon>
               <Logout />
             </ListItemIcon>
