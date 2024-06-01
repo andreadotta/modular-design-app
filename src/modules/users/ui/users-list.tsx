@@ -6,7 +6,7 @@ import LoadingSpinner from '@/shared/components/ui/loading-spinner';
 type UserListProps = {
   data: User[];
   loading: boolean;
-  fnTest: () => void;
+  fnTest?: () => void;
 };
 
 const UsersList = ({ data, loading, fnTest }: UserListProps) => {

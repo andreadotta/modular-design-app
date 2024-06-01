@@ -667,31 +667,23 @@ The main responsibilities of “Containers” are:
 This component represents the main users’ page. It manages the state of user data, data loading, and coordinates the child components to display the user list.
 
 ```typescript
+// src/components/containers/users/users-container.tsx
 'use client';
 
-import { useState } from 'react';
-import { isRight } from '@/shared/utils/either';
 import { Box, Toolbar } from '@mui/material';
 import { getCountryFromCoordinates } from '@/geo';
-import { getUsers, User, UsersList } from '@/users';
+import { User, UsersList } from '@/users';
 import CustomButton from '@/design-system/buttons/custom-button';
+import { useUsers } from '@/modules/users/hooks/use-users';
 
 export type UsersPageContainerProps = {
   initialData: User[];
 };
 
 const UsersContainer = ({ initialData }: UsersPageContainerProps) => {
-  const [data, setData] = useState<User[]>(initialData);
-  const [loading, setLoading] = useState(false);
-
-  const handleRefresh = async () => {
-    setLoading(true);
-    const result = await getUsers(getCountryFromCoordinates)();
-    if (isRight(result)) {
-      setData(result.value);
-    }
-    setLoading(false);
-  };
+  const { data, loading, error, refreshUsers } = useUsers(
+    getCountryFromCoordinates,
+  );
 
   return (
     <div>
@@ -701,24 +693,21 @@ const UsersContainer = ({ initialData }: UsersPageContainerProps) => {
           <CustomButton
             variant="contained"
             color="primary"
-            onClick={handleRefresh}
+            onClick={refreshUsers}
           >
             Refresh
           </CustomButton>
         </Toolbar>
       </Box>
-      <UsersList
-        data={data}
-        loading={loading}
-        fnTest={() => {
-          console.log('ciao');
-        }}
-      />
+      {error && <p style={{ color: 'red' }}>{error}</p>}
+      <UsersList data={data} loading={loading} />
     </div>
   );
 };
 
 export default UsersContainer;
+
+
 ```
 
 In this example, the UsersContainer component is responsible for:
