@@ -712,6 +712,7 @@ In this example, the UsersContainer component is responsible for:
 - Coordinating the rendering of the **`UserList`** component by passing user data and loading state as props.
 - Handling the refresh event to update user data through the **`handleRefresh`** function.
 - Orchestrating the user interface layout by placing the **`UserList`** component and the refresh button in the desired position.
+-
 
 #### Important Note
 
