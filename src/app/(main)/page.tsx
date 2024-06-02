@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import { Container, Box, Typography, Button } from '@mui/material';
+import { Container, Box, Typography } from '@mui/material';
 import Link from 'next/link';
 import CustomButton from '@/design-system/buttons/custom-button';
 import MainLayout from './layout';

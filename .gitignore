@@ -42,3 +42,6 @@
 !.eslintrc.json
 !.eslintignore
 node_modules
+
+# Sentry Config File
+.env.sentry-build-plugin
