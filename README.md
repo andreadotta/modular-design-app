@@ -519,35 +519,31 @@ export const userAdapter = (
 Custom hooks also receive services as parameters, ensuring that the logic for fetching and managing state can be tested independently.
 
 ```typescript
-export const useUsers = (
-  geoService: (lat: string, lon: string) => TaskEither<Error, string>,
-): UserState & { fetchData: () => void } => {
-  const [state, setState] = useState<UserState>({
-    loading: true,
-    error: null,
-    data: null,
-  });
+export const useUsers = (geoService: CountryFromCoordinates) => {
+  const [data, setData] = useState<User[]>([]);  // State to hold user data
+  const [loading, setLoading] = useState(false);  // State to manage loading status
+  const [error, setError] = useState<string | null>(null);  // State to hold error messages
 
-  const fetchData = useCallback(async () => {
-    setState((prevState) => ({ ...prevState, loading: true }));
-    const result = await getUsers(geoService)();
-
-    if (isLeft(result)) {
-      setState({ loading: false, error: result.value.message, data: null });
-    } else if (isRight(result)) {
-      setState({ loading: false, error: null, data: result.value });
+  /**
+   * Function to refresh user data.
+   * It sets the loading state, fetches the user data, and updates the states based on the result.
+   */
+  const refreshUsers = useCallback(async () => {
+    setLoading(true);  // Set loading state to true
+    setError(null);  // Reset error state
+    const result = await getUsers(geoService)();  // Fetch user data
+    if (isRight(result)) {
+      setData(result.value);  // Update data state if fetching is successful
+    } else {
+      setError(result.value.message);  // Set error message if fetching fails
     }
+    setLoading(false);  // Set loading state to false
   }, [geoService]);
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-
-  return { ...state, fetchData };
-};
+  return { data, loading, error, refreshUsers };  // Return states and refresh function
 ```
 
-###
+### };
 
 ### **Test Example**
 
@@ -662,7 +658,7 @@ The main responsibilities of “Containers” are:
 
 **`src/components/containers/users/users-container.tsx`**
 
-This component represents the main users’ page. It manages the state of user data, data loading, and coordinates the child components to display the user list.
+This component represents the main user page. It uses a custom hook, `useUsers`, to manage the state of user data, data loading, and errors, highlighting a clear separation of logic from the UI component. This hook also utilizes dependency injection, receiving `getCountryFromCoordinates` as a parameter to determine the country of users based on their coordinates, demonstrating a flexible and reusable approach in dependency management.
 
 ```typescript
 // src/components/containers/users/users-container.tsx
@@ -678,10 +674,22 @@ export type UsersPageContainerProps = {
   initialData: User[];
 };
 
+
 const UsersContainer = ({ initialData }: UsersPageContainerProps) => {
+  // Use custom hook to manage user data, loading state, and error state
   const { data, loading, error, refreshUsers } = useUsers(
     getCountryFromCoordinates,
   );
+
+  // Local state to manage the user data displayed in the component
+  const [localData, setLocalData] = useState<User[]>(initialData);
+
+  // Effect to update local data when new data is fetched
+  useEffect(() => {
+    if (data.length > 0) {
+      setLocalData(data);
+    }
+  }, [data]);
 
   return (
     <div>
@@ -698,7 +706,7 @@ const UsersContainer = ({ initialData }: UsersPageContainerProps) => {
         </Toolbar>
       </Box>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      <UsersList data={data} loading={loading} />
+      <UsersList data={localData} loading={loading} />
     </div>
   );
 };
@@ -710,7 +718,7 @@ In this example, the UsersContainer component is responsible for:
 
 - Managing the local state of user data (**`data`**) and loading state (**`loading`**).
 - Coordinating the rendering of the **`UserList`** component by passing user data and loading state as props.
-- Handling the refresh event to update user data through the **`handleRefresh`** function.
+- Handling the refresh event to update user data through the **`refreshUsers`** function.
 - Orchestrating the user interface layout by placing the **`UserList`** component and the refresh button in the desired position.
 -
 
@@ -781,6 +789,16 @@ Additionally, we specify the Node.js runtime environment in our **`next.config.m
 ```
 
 By setting **`runtime: 'nodejs'`**, we ensure that our application leverages the Node.js runtime environment, which is optimized for server-side operations, including data fetching and revalidation. This configuration is crucial for maintaining performance and reliability in our data handling processes.
+
+## Observability
+
+For application observability, [Sentry](https://sentry.io/) has been chosen, a tool that allows for effective monitoring and management of logs, traces, and metrics. Here's how Sentry is integrated into the app's ecosystem:
+
+- **Logs**: Sentry automatically captures and organizes error logs generated by the application, including stack traces, error messages, and operational context. Logs can be enriched with custom messages and additional information using functions like `captureMessage` and `captureEvent`.
+- **Traces**: Sentry's traces allow for viewing a user's complete interaction with the application by tracking the chain of requests and responses between modules or internal components. This helps identify performance bottlenecks and isolate the origins of errors.
+- **Metrics**: Sentry supports the creation and monitoring of custom metrics that can help assess the application's performance. Metrics such as Web Vitals or other frontend performances can be tracked to obtain a detailed view of the application's behavior in production.
+
+To ensure everything functions correctly, the organization and authentication token for Sentry are configured in the `.env` and `.env.local` files of the application, specifying the `NEXT_PUBLIC_SENTRY_ORG` variable and the `SENTRY_AUTH_TOKEN` in the `.env.sentry-build-plugin` file. Moreover, with Sentry, it is possible to automatically direct errors to different projects depending on the module.
 
 ### **License**
 

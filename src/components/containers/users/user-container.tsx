@@ -6,6 +6,7 @@ import { getCountryFromCoordinates } from '@/geo';
 import { User, UsersList } from '@/users';
 import CustomButton from '@/design-system/buttons/custom-button';
 import { useUsers } from '@/modules/users/hooks/use-users';
+import { useState, useEffect } from 'react';
 
 export type UsersPageContainerProps = {
   initialData: User[];
@@ -15,6 +16,13 @@ const UsersContainer = ({ initialData }: UsersPageContainerProps) => {
   const { data, loading, error, refreshUsers } = useUsers(
     getCountryFromCoordinates,
   );
+  const [localData, setLocalData] = useState<User[]>(initialData);
+
+  useEffect(() => {
+    if (data.length > 0) {
+      setLocalData(data);
+    }
+  }, [data]);
 
   return (
     <div>
@@ -31,7 +39,7 @@ const UsersContainer = ({ initialData }: UsersPageContainerProps) => {
         </Toolbar>
       </Box>
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      <UsersList data={data} loading={loading} />
+      <UsersList data={localData} loading={loading} />
     </div>
   );
 };
