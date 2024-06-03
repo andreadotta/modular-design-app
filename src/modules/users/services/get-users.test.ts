@@ -1,7 +1,7 @@
-import { isRight, left, right } from '@/shared/utils/either';
+import { isRight, left, right } from '@/utils/either';
 import { getUsers } from './get-users';
-import { TaskEither, taskEither } from '@/shared/utils/task-either';
-import { ErrorMessage } from '@/shared/components/error-message';
+import { TaskEither, taskEither } from '@/utils/task-either';
+import { ErrorMessage } from '@/utils/error-message';
 
 const mockGeoService = (
   lat: string,

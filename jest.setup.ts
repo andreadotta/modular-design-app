@@ -1,5 +1,4 @@
-import { server } from '@/mocks/server';
-
+import { server } from './src/mocks/server';
 
 // Stabilisce un'istanza del server MSW prima di tutti i test
 beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }));

@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "test": "jest --config jest.config.ts",
+    "test:unit": "jest --config jest.config.ts --testPathPattern=src/modules",
+    "test:e2e": "jest --config jest.config.ts --testPathPattern=tests/e2e",
+    "test:e2e:debug": "jest --config jest.config.ts --testPathPattern=tests/e2e --detectOpenHandles"
   },
   "dependencies": {
     "@emotion/react": "^11.11.4",
@@ -21,6 +24,7 @@
     "next": "14.2.3",
     "pidusage": "^3.0.2",
     "postcss": "^8.4.38",
+    "puppeteer": "^22.10.0",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.51.5",
