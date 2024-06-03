@@ -4,7 +4,7 @@
 import { Box, Toolbar } from '@mui/material';
 import { getCountryFromCoordinates } from '@/geo';
 import { User, UsersList } from '@/users';
-import CustomButton from '@/design-system/buttons/custom-button';
+import CustomButton from '@/ui/buttons/custom-button';
 import { useUsers } from '@/modules/users/hooks/use-users';
 import { useState, useEffect } from 'react';
 

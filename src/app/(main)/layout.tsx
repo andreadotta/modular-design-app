@@ -1,7 +1,7 @@
 import React from 'react';
 import Sidebar from '@/components/sidebar/ui';
-import StyledBox from '@/design-system/box/styled-box';
-import CustomContainer from '@/design-system/containers/custom-container';
+import StyledBox from '@/ui/box/styled-box';
+import CustomContainer from '@/ui/containers/custom-container';
 
 export default function MainLayout({
   children,

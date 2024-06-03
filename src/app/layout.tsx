@@ -4,9 +4,6 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '@/theme';
 import { AuthProvider } from '@/auth';
-import type { NextWebVitalsMetric } from 'next/app';
-import { useReportWebVitals } from 'next/web-vitals';
-import * as Sentry from '@sentry/nextjs';
 export default function RootLayout({
   children,
 }: {

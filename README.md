@@ -1,5 +1,7 @@
 # README
 
+Summary
+
 ##
 
 # Modular design front-end app
@@ -24,20 +26,20 @@ A modular and scalable front-end application example developed using a component
 
 ### **Code Structure**
 
-We need to clearly distinguish three levels in our application: **Module**, **Application**, and **Presentation**
+We need to clearly distinguish three levels in our application: **Module**, **Application**, and **Presention**
 
 1. **Module**:
    - This level contains autonomous and reusable components that manage independent entities and aggregates.
    - Components at this level are designed to be composed at higher levels.
 2. **Application**:
-   - This level manages the overall application.
-   - Here, libraries like the Design System are used and customized.
-   - Any customizations to the Design System are done at this level, not at the level of individual components.
-   - Design System customizations are passed as props to the components that need them.
-3. **Presentation (Design System)**:
-   - A shared library that provides the base design and styles for the application.
+   - This level manages the entire application.
+   - Orchestration of modules.
+   - Management of containers.
+   - Can include other UI components.
+3. **Presentation**:
+   - Provides the base design or its extension for the application and modules.
    - It is a shared dependency at the Application level.
-   - Specific customizations should be handled at the Application level and then propagated to the Components.
+   - To avoid injecting styled components into the modules, it can be considered a shared library, which could be, for example, a package in a monorepo. Similar to MUI, it is accepted that modules have common dependencies.
 
 In summary, the Design System is a shared library, and any customization is managed at the Application level, not at the level of individual Components. This approach ensures that the Design System remains consistent and that customizations are centralized and easy to manage. In this project, we have chosen MUI (Material-UI) as our external Design System. Customizations will be done using styled components. This approach ensures that the Design System remains consistent and that customizations are centralized and easy to manage.
 
