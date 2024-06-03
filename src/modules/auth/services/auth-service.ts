@@ -2,7 +2,7 @@ import { Either, left, isLeft, right } from '@/shared/utils/either';
 import { TaskEither, taskEither } from '@/shared/utils/task-either';
 import { AuthResponse, AuthUser, AuthUserSchema } from '../types/auth';
 import fetchData from '@/shared/utils/fetch-data';
-import { ErrorMessage } from '@/shared/components/error-message';
+import { ErrorMessage } from '@/utils/error-message';
 
 const AUTH_URL = 'https://jsonplaceholder.typicode.com/users';
 

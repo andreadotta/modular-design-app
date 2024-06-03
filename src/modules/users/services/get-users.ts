@@ -3,7 +3,7 @@ import { taskEither, TaskEither } from '@/shared/utils/task-either';
 import { userAdapter } from './user-adapter';
 
 import { CountryFromCoordinates, User } from '../types/user';
-import { ErrorMessage } from '@/shared/components/error-message';
+import { ErrorMessage } from '@/utils/error-message';
 import fetchData from '@/shared/utils/fetch-data';
 import { userValidator } from './user-validator';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import Sidebar from '@/components/sidebar/ui';
-import StyledBox from '@/design-system/box/styled-box';
-import { Container } from '@mui/material';
+import StyledBox from '@/ui/box/styled-box';
+import CustomContainer from '@/ui/containers/custom-container';
 
 export default function MainLayout({
   children,
@@ -9,9 +9,9 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Container maxWidth="lg" sx={{ display: 'flex' }}>
+    <CustomContainer maxWidth="lg">
       <Sidebar />
       <StyledBox component="main">{children}</StyledBox>
-    </Container>
+    </CustomContainer>
   );
 }

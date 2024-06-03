@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { User, UsersGrid } from '@/modules/users';
-import LoadingSpinner from '@/shared/components/ui/loading-spinner';
+import LoadingSpinner from '@/ui/loading-spinner';
 
 type UserListProps = {
   data: User[];

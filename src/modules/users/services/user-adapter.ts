@@ -1,4 +1,4 @@
-import { ErrorMessage } from '@/shared/components/error-message';
+import { ErrorMessage } from '@/utils/error-message';
 import { CountryFromCoordinates, User } from '../types/user';
 import { Either, isRight, right, left } from '@/shared/utils/either';
 import { TaskEither, taskEither } from '@/shared/utils/task-either';

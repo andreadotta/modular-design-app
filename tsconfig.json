@@ -18,7 +18,8 @@
       }
     ],
     "paths": {
-      "@/shared/*": ["./src/shared/*"],
+      "@/utils/*": ["./src/shared/utils/*"],
+      "@/ui/*": ["./src/shared/ui/*"],
       "@/containers/*": ["./src/components/containers/*"],
       "@/users": ["./src/modules/users/index"],
       "@/geo": ["./src/modules/geo/index"],

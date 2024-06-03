@@ -1,10 +1,9 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '@/theme';
 import { AuthProvider } from '@/auth';
-
 export default function RootLayout({
   children,
 }: {
