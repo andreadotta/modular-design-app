@@ -1,45 +1,39 @@
-# README
-
-Summary
-
-##
-
 # Modular design front-end app
 
 A modular and scalable front-end application example developed using a component-driven approach. The project leverages React for UI management, TypeScript for functional business logic, and Next.js 14 for server-side rendering and routing. It incorporates principles of modular architecture to ensure maintainability and testability of the codebase.
 
 ### **Technologies Used**
 
-- **React**: JavaScript library for building user interfaces.
-- **TypeScript**: A language that adds static types to JavaScript, improving code reliability.
-- **Next.js 14**: A React framework for server-side rendering and routing.
-- **Modular Architecture**: An approach that separates concerns and facilitates code maintainability and scalability.
+*   **React**: JavaScript library for building user interfaces.
+*   **TypeScript**: A language that adds static types to JavaScript, improving code reliability.
+*   **Next.js 14**: A React framework for server-side rendering and routing.
+*   **Modular Architecture**: An approach that separates concerns and facilitates code maintainability and scalability.
 
 ### **Architectural Principles**
 
-- **Component-Driven Development**: Development is based on autonomous, reusable, and testable components.
-- **Component-Based Design**: Each component is designed to be autonomous and independent, encapsulating logic, state, and user interface.
-- **Separation of Concerns**: Clear separation between business logic, presentation, and state management.
-- **Single Responsibility Principle**: Each component and service is responsible for a single functionality or aggregate.
-- **Service Layer Pattern**: Encapsulates data access logic in a separate layer, promoting maintainability and scalability.
-- **Container Components**: Components responsible for fetching data and passing it to presentational components.
+*   **Component-Driven Development**: Development is based on autonomous, reusable, and testable components.
+*   **Component-Based Design**: Each component is designed to be autonomous and independent, encapsulating logic, state, and user interface.
+*   **Separation of Concerns**: Clear separation between business logic, presentation, and state management.
+*   **Single Responsibility Principle**: Each component and service is responsible for a single functionality or aggregate.
+*   **Service Layer Pattern**: Encapsulates data access logic in a separate layer, promoting maintainability and scalability.
+*   **Container Components**: Components responsible for fetching data and passing it to presentational components.
 
 ### **Code Structure**
 
 We need to clearly distinguish three levels in our application: **Module**, **Application**, and **Presention**
 
 1. **Module**:
-   - This level contains autonomous and reusable components that manage independent entities and aggregates.
-   - Components at this level are designed to be composed at higher levels.
+    *   This level contains autonomous and reusable components that manage independent entities and aggregates.
+    *   Components at this level are designed to be composed at higher levels.
 2. **Application**:
-   - This level manages the entire application.
-   - Orchestration of modules.
-   - Management of containers.
-   - Can include other UI components.
+    *   This level manages the entire application.
+    *   Orchestration of modules.
+    *   Management of containers.
+    *   Can include other UI components.
 3. **Presentation**:
-   - Provides the base design or its extension for the application and modules.
-   - It is a shared dependency at the Application level.
-   - To avoid injecting styled components into the modules, it can be considered a shared library, which could be, for example, a package in a monorepo. Similar to MUI, it is accepted that modules have common dependencies.
+    *   Provides the base design or its extension for the application and modules.
+    *   It is a shared dependency at the Application level.
+    *   To avoid injecting styled components into the modules, it can be considered a shared library, which could be, for example, a package in a monorepo. Similar to MUI, it is accepted that modules have common dependencies.
 
 In summary, the Design System is a shared library, and any customization is managed at the Application level, not at the level of individual Components. This approach ensures that the Design System remains consistent and that customizations are centralized and easy to manage. In this project, we have chosen MUI (Material-UI) as our external Design System. Customizations will be done using styled components. This approach ensures that the Design System remains consistent and that customizations are centralized and easy to manage.
 
@@ -89,6 +83,8 @@ git push origin feature/feature-names
 
 1. Open a Pull Request.
 
+  
+
 ## **Module Structure**
 
 In our project, we adopt a modular approach where each component handles a single entity or aggregate. Each component has its flexible internal architecture, adaptable to specific needs.
@@ -104,9 +100,11 @@ The architecture is divided into modules containing domain-specific logic. Each 
 5. **Types** (`types`): Define TypeScript types to improve type safety and code maintainability.
 6. **UI Components** (`ui`): Contain domain-specific user interface components.
 
-###
+###   
 
 #### Example of a Module
+
+  
 
 #### Contexts (`contexts`)
 
@@ -140,7 +138,7 @@ export const ExampleProvider = ({ children }: { children: ReactNode }) => {
 };
 ```
 
-####
+####   
 
 #### Hooks (`hooks`)
 
@@ -150,6 +148,7 @@ Hooks contain reusable business logic. They can be customized using React's `use
 
 ```typescript
 // src/modules/example/hooks/use-example-store.ts
+
 
 import { useState, useCallback, useEffect } from 'react';
 import { fetchExampleData } from '../services/example-service';
@@ -179,26 +178,19 @@ export const useExample = () => {
     });
   }, [exampleData]);
 
-  const fetchData = useCallback(
-    async (id: string) => {
-      setExampleState({ loading: true, error: null, data: null });
+  const fetchData = useCallback(async (id: string) => {
+    setExampleState({ loading: true, error: null, data: null });
 
-      const result: Either<Error, any> = await fetchExampleData(id)();
+    const result: Either<Error, any> = await fetchExampleData(id)();
 
-      if (isRight(result)) {
-        const data = result.value;
-        setExampleData(data);
-        setExampleState({ loading: false, error: null, data });
-      } else {
-        setExampleState({
-          loading: false,
-          error: result.value.message,
-          data: null,
-        });
-      }
-    },
-    [setExampleData],
-  );
+    if (isRight(result)) {
+      const data = result.value;
+      setExampleData(data);
+      setExampleState({ loading: false, error: null, data });
+    } else {
+      setExampleState({ loading: false, error: result.value.message, data: null });
+    }
+  }, [setExampleData]);
 
   const clearData = useCallback(() => {
     clearExampleData();
@@ -209,7 +201,7 @@ export const useExample = () => {
 };
 ```
 
-####
+####   
 
 #### Services (`services`)
 
@@ -288,13 +280,15 @@ export const getUsers = (
 };
 ```
 
-####
+####   
 
 #### Stores (`stores`)
 
 Stores manage the application's state using libraries like Zustand. They allow state sharing between various components without passing props.
 
 **Example**:
+
+  
 
 ```typescript
 // src/modules/example/stores/example-store.ts
@@ -323,7 +317,7 @@ export const useExampleStore = create<ExampleState>()(
 );
 ```
 
-####
+####   
 
 #### Types (`types`)
 
@@ -341,8 +335,8 @@ import { z } from 'zod';
  * The schema is used for runtime type validation.
  */
 export const AuthUserSchema = z.object({
-  id: z.number(), // The user's ID, must be a number
-  email: z.string().email(), // The user's email, must be a string formatted as an email
+  id: z.number(),                // The user's ID, must be a number
+  email: z.string().email(),     // The user's email, must be a string formatted as an email
 });
 
 /**
@@ -350,17 +344,19 @@ export const AuthUserSchema = z.object({
  * Includes information on whether the authentication was successful, the user, and a possible error message.
  */
 export const AuthResponseSchema = z.object({
-  success: z.boolean(), // Indicates if authentication was successful, must be a boolean
+  success: z.boolean(),          // Indicates if authentication was successful, must be a boolean
   user: AuthUserSchema.optional(), // The authenticated user, can be optional
-  error: z.string().optional(), // A possible error message, can be optional
+  error: z.string().optional(),  // A possible error message, can be optional
 });
 
 // TypeScript types derived from the zod schemas, for use in the rest of the TypeScript code
-export type AuthUser = z.infer<typeof AuthUserSchema>; // Type for the authenticated user
+export type AuthUser = z.infer<typeof AuthUserSchema>;   // Type for the authenticated user
 export type AuthResponse = z.infer<typeof AuthResponseSchema>; // Type for the authentication response
+
+
 ```
 
-####
+####   
 
 #### UI Components (`ui`)
 
@@ -434,9 +430,15 @@ const ExampleForm = ({ onSubmit }: ExampleFormProps) => {
 export default ExampleForm;
 ```
 
+  
+
 This modular architecture and use of container components as orchestrators make the project easily extendable and maintainable. The modules contain domain-specific logic, while the containers centralize the application's flow logic, allowing for clear separation of concerns and facilitating code reusability.
 
-###
+  
+
+  
+
+###   
 
 ### **Design Patterns Used**
 
@@ -466,19 +468,23 @@ The data access logic is encapsulated in a service layer, clearly separating API
 
 Dependency injection is crucial for maintaining a modular and testable architecture. This approach allows components to receive external services as parameters, rather than creating them directly, making the code more flexible and easier to test.
 
-###
+###   
 
 ### **Principles of Dependency Injection**
 
 Dependency injection offers several advantages:
 
-- **Decoupling**: Reduces rigid dependencies between components, making the code more modular.
-- **Testability**: Facilitates unit testing since dependencies can be easily replaced with mocks or stubs.
-- **Flexibility**: Allows changing the implementations of dependencies without modifying the component’s code.
+*   **Decoupling**: Reduces rigid dependencies between components, making the code more modular.
+*   **Testability**: Facilitates unit testing since dependencies can be easily replaced with mocks or stubs.
+*   **Flexibility**: Allows changing the implementations of dependencies without modifying the component’s code.
+
+  
 
 #### **Use Case: Adapter Utilizing an Injected Dependency**
 
 In our application, we use dependency injection to adapt user data with geographic information. The user adapter accepts an external service function as a parameter, which is used to fetch the country from geographic coordinates.
+
+  
 
 ```typescript
 const adaptUser = async (
@@ -514,7 +520,7 @@ export const userAdapter = (
 };
 ```
 
-###
+###   
 
 ### **Custom Hook**
 
@@ -580,7 +586,7 @@ describe('UserService', () => {
 
 ```
 
-###
+###   
 
 ### **Real Implementation in the Page**
 
@@ -597,7 +603,7 @@ async function fetchInitialData(): Promise<User[]> {
 
 This way, dependency injection allows components to be more modular, easily testable, and flexible, improving the overall architecture of the application.
 
-##
+##   
 
 ## **Service Layer**
 
@@ -609,11 +615,11 @@ The Service Layer is a layer in software architecture that handles business logi
 
 The Service Layer acts as an intermediary between the presentation layer and external resources, providing a consistent interface for performing business operations. This layer handles:
 
-- **Data Fetching**: Retrieving data from external sources such as APIs or databases.
-- **Data Adaptation**: Transforming raw data into a format usable by the application.
-- **Data Validation**: Ensuring the integrity and correctness of data before using or saving it.
+*   **Data Fetching**: Retrieving data from external sources such as APIs or databases.
+*   **Data Adaptation**: Transforming raw data into a format usable by the application.
+*   **Data Validation**: Ensuring the integrity and correctness of data before using or saving it.
 
-###
+###   
 
 ### **Implementation Example**
 
@@ -644,23 +650,31 @@ export default async function Page() {
 }
 ```
 
+  
+
 ## **Containers**
 
-“Containers” are React components that represent the main pages or views of the application. They are responsible for orchestrating the presentation logic, managing local state, and coordinating interactions between child components.
+"Containers" are React components that represent the main pages or views of the application. They are responsible for orchestrating the presentation logic, managing local state, and coordinating interactions between child components.
 
-The main responsibilities of “Containers” are:
+The main responsibilities of "Containers" are:
 
-- **Orchestration of child components**: Containers compose various child components to create the complete user interface of the page or view. They determine which components should be displayed and how they should be arranged.
-- **Local state management**: Screens uses hooks to manage the local state of the page or view, such as the data to be displayed, the loading state, etc. These states are then passed to the child components as props.
-- **Coordination of interactions**: Containers coordinate interactions between child components, such as handling events, updating data, and communicating between components.
-- **Data fetching**: Often, Containers are responsible for fetching the data needed for the page or view, such using service layer to invoking APIs or using hooks to reading data from the application context.
-- **Conditional rendering**: Containers can handle the conditional rendering of certain parts of the user interface based on the application state or available data.
+1. **Orchestration of child components:** Containers compose various child components to create the complete user interface of the page or view. They determine which components should be displayed and how they should be arranged.
+2. **Local state management:** Containers use or aggregate hooks from the respective modules to manage the local state of the page or view, such as the data to be displayed, the loading state, etc. These states are then passed to the child components as props. However, the Container will never handle internal logic or operate on module types.
+3. **Coordination of interactions:** Containers coordinate interactions between child components, such as handling events, updating data, and communicating between components.
+4. **Data fetching:** Often, Containers are responsible for fetching the data needed for the page or view, using a service layer to invoke APIs or using module hooks to invoke actions on the modules from the application context.
+5. **Conditional rendering:** Containers do not handle conditional rendering of parts of the user interface based on the application state or available data, as they do not know the values defined in the module types.
+
+  
 
 ### **Implementation Example**
+
+  
 
 **`src/components/containers/users/users-container.tsx`**
 
 This component represents the main user page. It uses a custom hook, `useUsers`, to manage the state of user data, data loading, and errors, highlighting a clear separation of logic from the UI component. This hook also utilizes dependency injection, receiving `getCountryFromCoordinates` as a parameter to determine the country of users based on their coordinates, demonstrating a flexible and reusable approach in dependency management.
+
+  
 
 ```typescript
 // src/components/containers/users/users-container.tsx
@@ -718,15 +732,18 @@ export default UsersContainer;
 
 In this example, the UsersContainer component is responsible for:
 
-- Managing the local state of user data (**`data`**) and loading state (**`loading`**).
-- Coordinating the rendering of the **`UserList`** component by passing user data and loading state as props.
-- Handling the refresh event to update user data through the **`refreshUsers`** function.
-- Orchestrating the user interface layout by placing the **`UserList`** component and the refresh button in the desired position.
--
+*   Managing the local state of user data (**`data`**) and loading state (**`loading`**).
+*   Coordinating the rendering of the **`UserList`** component by passing user data and loading state as props.
+*   Handling the refresh event to update user data through the **`refreshUsers`** function.
+*   Orchestrating the user interface layout by placing the **`UserList`** component and the refresh button in the desired position.
 
 #### Important Note
 
 The container should never directly manipulate types or perform business actions, but should only orchestrate. State management and business actions should be handled through hooks.
+
+  
+
+  
 
 ### **Build-Time Page Generation and Client-Side Updates**
 
@@ -757,17 +774,21 @@ export default async function Page() {
 }
 ```
 
-###
+###   
 
 ### **Client-Side Updates**
 
 For dynamic data updates, we use a combination of **`useState`**, **`useEffect`**, and **`useCallback`** in a custom hook called **`useUsers`**. This allows us to keep the data updated on the client and reflect any changes in real-time.
+
+  
 
 ### **Description of the Mechanism**
 
 1. **Build-Time Page Generation**: User pages are generated at build time, using data fetched once and stored in static HTML.
 2. **Revalidation**: Data is reloaded periodically (every 15 minutes) to ensure it does not become outdated.
 3. **Client-Side Updates**: We use a custom hook (**`useUsers`**) to manage the client-side data state and update the UI in real-time.
+
+  
 
 ### **Revalidation**
 
@@ -792,15 +813,19 @@ Additionally, we specify the Node.js runtime environment in our **`next.config.m
 
 By setting **`runtime: 'nodejs'`**, we ensure that our application leverages the Node.js runtime environment, which is optimized for server-side operations, including data fetching and revalidation. This configuration is crucial for maintaining performance and reliability in our data handling processes.
 
+  
+
 ## Observability
 
 For application observability, [Sentry](https://sentry.io/) has been chosen, a tool that allows for effective monitoring and management of logs, traces, and metrics. Here's how Sentry is integrated into the app's ecosystem:
 
-- **Logs**: Sentry automatically captures and organizes error logs generated by the application, including stack traces, error messages, and operational context. Logs can be enriched with custom messages and additional information using functions like `captureMessage` and `captureEvent`.
-- **Traces**: Sentry's traces allow for viewing a user's complete interaction with the application by tracking the chain of requests and responses between modules or internal components. This helps identify performance bottlenecks and isolate the origins of errors.
-- **Metrics**: Sentry supports the creation and monitoring of custom metrics that can help assess the application's performance. Metrics such as Web Vitals or other frontend performances can be tracked to obtain a detailed view of the application's behavior in production.
+*   **Logs**: Sentry automatically captures and organizes error logs generated by the application, including stack traces, error messages, and operational context. Logs can be enriched with custom messages and additional information using functions like `captureMessage` and `captureEvent`.
+*   **Traces**: Sentry's traces allow for viewing a user's complete interaction with the application by tracking the chain of requests and responses between modules or internal components. This helps identify performance bottlenecks and isolate the origins of errors.
+*   **Metrics**: Sentry supports the creation and monitoring of custom metrics that can help assess the application's performance. Metrics such as Web Vitals or other frontend performances can be tracked to obtain a detailed view of the application's behavior in production.
 
 To ensure everything functions correctly, the organization and authentication token for Sentry are configured in the `.env` and `.env.local` files of the application, specifying the `NEXT_PUBLIC_SENTRY_ORG` variable and the `SENTRY_AUTH_TOKEN` in the `.env.sentry-build-plugin` file. Moreover, with Sentry, it is possible to automatically direct errors to different projects depending on the module.
+
+  
 
 ### **License**
 
