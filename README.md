@@ -217,13 +217,13 @@ import { taskEither, TaskEither } from '@/shared/utils/task-either';
 import { userAdapter } from './user-adapter';
 
 import { CountryFromCoordinates, User } from '../types/user';
-import { ErrorMessage } from '@/shared/components/error-message';
+import { ErrorMessage } from '@/utils/error-message';
 import fetchData from '@/shared/utils/fetch-data';
 import { userValidator } from './user-validator';
+import { getCountryFromCoordinates } from '@/geo';
 
-export const getUsers = (
-  geoService: CountryFromCoordinates,
-): TaskEither<Error, User[]> => {
+export const getUsers = (): TaskEither<Error, User[]> => {
+  const geoService = getCountryFromCoordinates;
   const validateUsers = (users: User[]): Either<Error, User[]> => {
     const validatedUsers = users.map(userValidator);
     const errors = validatedUsers.filter(isLeft);
@@ -436,10 +436,6 @@ This modular architecture and use of container components as orchestrators make 
 
   
 
-  
-
-###   
-
 ### **Design Patterns Used**
 
 **Component-Based Design**:
@@ -470,9 +466,9 @@ Dependency injection is crucial for maintaining a modular and testable architect
 
 ###   
 
-### **Principles of Dependency Injection**
+### **Principles of EventBus Communication**
 
-Dependency injection offers several advantages:
+EventBus communication offers several advantages:
 
 *   **Decoupling**: Reduces rigid dependencies between components, making the code more modular.
 *   **Testability**: Facilitates unit testing since dependencies can be easily replaced with mocks or stubs.
@@ -482,45 +478,103 @@ Dependency injection offers several advantages:
 
 #### **Use Case: Adapter Utilizing an Injected Dependency**
 
-In our application, we use dependency injection to adapt user data with geographic information. The user adapter accepts an external service function as a parameter, which is used to fetch the country from geographic coordinates.
+In our application, we use an EventBus to facilitate communication between the container and its components. This approach enables modularity and clear separation of concerns. Below is an example of how the EventBus is utilized for refreshing user data..
 
   
 
 ```typescript
-const adaptUser = async (
-  input: any,
-  geoService: (lat: string, lon: string) => TaskEither<Error, string>,
-): Promise<Either<Error, User>> => {
-  const countryResult = await geoService(
-    input.address.geo.lat,
-    input.address.geo.lng,
-  )();
-  const user: User = {
-    id: input.id,
-    name: input.name,
-    username: input.username,
-    email: input.email,
-    address: {
-      street: input.address.street,
-      city: input.address.city,
-      zipcode: input.address.zipcode,
-      country: isRight(countryResult) ? countryResult.value : undefined,
-    },
-    phone: input.phone,
-    website: ensureHttp(input.website),
+// UsersContainer.tsx
+import React from 'react';
+import { Box, Toolbar } from '@mui/material';
+import CustomButton from '@/ui/buttons/custom-button';
+import { UsersList } from '@/users';
+import { UserEvents, UserEventKeys } from '@/modules/users/events';
+import { createEventBus } from '@/utils/event-bus';
+
+const UsersContainer = ({ initialData, token }) => {
+  // Create EventBus with a specific scope
+  const userEventBus = createEventBus<UserEvents>('users-scope');
+
+  const emitRefreshUsers = () => {
+    userEventBus.emit(UserEventKeys.refreshUsers, undefined);
   };
-  return right(user);
+
+  return (
+    <Box>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <h1>Users List</h1>
+        <Toolbar>
+          <CustomButton variant="contained" color="primary" onClick={emitRefreshUsers}>
+            Refresh
+          </CustomButton>
+        </Toolbar>
+      </Box>
+      <UsersList token={token} initialData={initialData} eventBus={userEventBus} />
+    </Box>
+  );
 };
 
-export const userAdapter = (
-  input: any,
-  geoService: (lat: string, lon: string) => TaskEither<Error, string>,
-): TaskEither<Error, User> => {
-  return taskEither(() => adaptUser(input, geoService));
-};
+export default UsersContainer;
 ```
 
 ###   
+
+**Handling Events in the Component**
+
+The UsersList component listens for the refresh event emitted by the UsersContainer and refreshes the user data accordingly.
+
+  
+
+```typescript
+// UsersList.tsx
+import React, { useEffect, useState } from 'react';
+import { User, UserEventKeys, UsersGrid } from '@/users';
+import LoadingSpinner from '@/ui/loading-spinner';
+import { EventBus } from '@/utils/event-bus';
+import { UserEvents } from '../events';
+import { useUsers } from '@/users';
+
+const UsersList = ({ token, initialData, eventBus }) => {
+  const { data, loading, error, refreshUsers } = useUsers(token);
+  const [users, setUsers] = useState<User[]>(initialData);
+
+  useEffect(() => {
+    if (data.length > 0) {
+      setUsers(data);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    const handleRefreshUsers = () => {
+      refreshUsers();
+    };
+
+    eventBus.on(UserEventKeys.refreshUsers, handleRefreshUsers);
+
+    return () => {
+      eventBus.off(UserEventKeys.refreshUsers, handleRefreshUsers);
+    };
+  }, [eventBus, refreshUsers]);
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
+
+  return (
+    <div>
+      {loading ? (
+        <LoadingSpinner type="circular" color="primary" />
+      ) : (
+        <UsersGrid data={users} />
+      )}
+    </div>
+  );
+};
+
+export default UsersList;
+```
+
+  
 
 ### **Custom Hook**
 
@@ -594,7 +648,7 @@ In the real case, the page passes the actual geolocation service when calling th
 
 ```typescript
 async function fetchInitialData(): Promise<User[]> {
-  const result = await getUsers(getCountryFromCoordinates)();
+  const result = await getUsers()();
   console.log('User page', 'fetchInitialData');
   const data = isRight(result) ? result.value : [];
   return data.slice(0, 8);
@@ -634,7 +688,7 @@ import { getCountryFromCoordinates } from '@/components/geo/';
 
 // Asynchronous function to fetch initial user data
 async function fetchInitialData(): Promise<ValidatedUser[]> {
-  const result = await getUsers(getCountryFromCoordinates)();
+  const result = await getUsers()();
   console.log('User page', 'fetchInitialData');
   const data = isRight(result) ? result.value : [];
   return data.slice(0, 8); // Returns only the first 8 users for testing purposes
@@ -677,53 +731,34 @@ This component represents the main user page. It uses a custom hook, `useUsers`,
   
 
 ```typescript
-// src/components/containers/users/users-container.tsx
-'use client';
-
+// UsersContainer.tsx
+import React from 'react';
 import { Box, Toolbar } from '@mui/material';
-import { getCountryFromCoordinates } from '@/geo';
-import { User, UsersList } from '@/users';
-import CustomButton from '@/design-system/buttons/custom-button';
-import { useUsers } from '@/modules/users/hooks/use-users';
+import CustomButton from '@/ui/buttons/custom-button';
+import { UsersList } from '@/users';
+import { UserEvents, UserEventKeys } from '@/modules/users/events';
+import { createEventBus } from '@/utils/event-bus';
 
-export type UsersPageContainerProps = {
-  initialData: User[];
-};
+const UsersContainer = ({ initialData, token }) => {
+  // Create EventBus with a specific scope
+  const userEventBus = createEventBus<UserEvents>('users-scope');
 
-
-const UsersContainer = ({ initialData }: UsersPageContainerProps) => {
-  // Use custom hook to manage user data, loading state, and error state
-  const { data, loading, error, refreshUsers } = useUsers(
-    getCountryFromCoordinates,
-  );
-
-  // Local state to manage the user data displayed in the component
-  const [localData, setLocalData] = useState<User[]>(initialData);
-
-  // Effect to update local data when new data is fetched
-  useEffect(() => {
-    if (data.length > 0) {
-      setLocalData(data);
-    }
-  }, [data]);
+  const emitRefreshUsers = () => {
+    userEventBus.emit(UserEventKeys.refreshUsers, undefined);
+  };
 
   return (
-    <div>
-      <Box display="flex" justifyContent="space-between" alignItems="center">
+    <Box>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
         <h1>Users List</h1>
         <Toolbar>
-          <CustomButton
-            variant="contained"
-            color="primary"
-            onClick={refreshUsers}
-          >
+          <CustomButton variant="contained" color="primary" onClick={emitRefreshUsers}>
             Refresh
           </CustomButton>
         </Toolbar>
       </Box>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <UsersList data={localData} loading={loading} />
-    </div>
+      <UsersList token={token} initialData={initialData} eventBus={userEventBus} />
+    </Box>
   );
 };
 
@@ -732,10 +767,11 @@ export default UsersContainer;
 
 In this example, the UsersContainer component is responsible for:
 
-*   Managing the local state of user data (**`data`**) and loading state (**`loading`**).
-*   Coordinating the rendering of the **`UserList`** component by passing user data and loading state as props.
-*   Handling the refresh event to update user data through the **`refreshUsers`** function.
-*   Orchestrating the user interface layout by placing the **`UserList`** component and the refresh button in the desired position.
+*   Managing the local state of user data (`data`) and loading state (`loading`).
+*   Coordinating the rendering of the `UserList` component by passing user data and loading state as props.
+*   Handling the refresh event to update user data through the emitRefreshUsers function using the `EventBus`.
+*   Orchestrating the user interface layout by placing the UserList component and the refresh button in the desired position.
+*   
 
 #### Important Note
 
