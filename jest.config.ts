@@ -8,10 +8,14 @@ const config: Config.InitialOptions = {
     '**/tests/e2e/**/*.test.ts', // E2E tests
     '**/src/**/*.test.ts', // Unit tests
   ],
-  globals: {
-    'ts-jest': {
-      tsconfig: 'tsconfig.json',
-    },
+  transform: {
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        tsconfig: 'tsconfig.json',
+        // altre configurazioni di ts-jest
+      },
+    ],
   },
   moduleNameMapper: {
     '^@/utils/(.*)$': '<rootDir>/src/shared/utils/$1',

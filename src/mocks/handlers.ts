@@ -1,32 +1,31 @@
-import { http, HttpResponse } from 'msw'
+import { http, HttpResponse, PathParams, DefaultBodyType } from 'msw';
 export const handlers = [
   http.get('https://jsonplaceholder.typicode.com/users', () => {
     return HttpResponse.json([
       {
         id: 1,
-        name: "Leanne Graham",
-        username: "Bret",
-        email: "Sincere@april.biz",
+        name: 'Leanne Graham',
+        username: 'Bret',
+        email: 'Sincere@april.biz',
         address: {
-          street: "Kulas Light",
-          suite: "Apt. 556",
-          city: "Gwenborough",
-          zipcode: "92998-3874",
+          street: 'Kulas Light',
+          suite: 'Apt. 556',
+          city: 'Gwenborough',
+          zipcode: '92998-3874',
           geo: {
-            lat: "-37.3159",
-            lng: "81.1496"
-          }
+            lat: '-37.3159',
+            lng: '81.1496',
+          },
         },
-        phone: "1-770-736-8031 x56442",
-        website: "hildegard.org",
+        phone: '1-770-736-8031 x56442',
+        website: 'hildegard.org',
         company: {
-          name: "Romaguera-Crona",
-          catchPhrase: "Multi-layered client-server neural-net",
-          bs: "harness real-time e-markets"
-        }
-      }
-    ])
-
+          name: 'Romaguera-Crona',
+          catchPhrase: 'Multi-layered client-server neural-net',
+          bs: 'harness real-time e-markets',
+        },
+      },
+    ]);
   }),
 
   http.get('https://nominatim.openstreetmap.org/reverse', ({ request }) => {
@@ -37,15 +36,15 @@ export const handlers = [
     if (lat === '-37.3159' && lon === '81.1496') {
       return HttpResponse.json({
         address: {
-          country: "Australia"
-        }
+          country: 'Australia',
+        },
       });
     } else {
       return HttpResponse.json({
         address: {
-          country: "Unknown"
-        }
+          country: 'Unknown',
+        },
       });
     }
-  })
+  }),
 ];

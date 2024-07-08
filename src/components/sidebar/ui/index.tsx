@@ -18,9 +18,11 @@ import {
 import Link from 'next/link';
 import { useAuth } from '@/auth';
 
-const drawerWidth = 240;
+interface SidebarProps {
+  drawerWidth: number;
+}
 
-const Sidebar = () => {
+const Sidebar = ({ drawerWidth }: SidebarProps) => {
   const { authState, logout } = useAuth();
   const [authenticated, setAuthenticated] = useState(authState.authenticated);
 
@@ -34,7 +36,7 @@ const Sidebar = () => {
       sx={{
         width: drawerWidth,
         flexShrink: 0,
-        [`& .MuiDrawer-paper`]: {
+        '& .MuiDrawer-paper': {
           width: drawerWidth,
           boxSizing: 'border-box',
           bgcolor: '#F4F6F8', // background color for sidebar
@@ -43,31 +45,51 @@ const Sidebar = () => {
       }}
     >
       <Toolbar>
-        <ListItemText primary="Modular Design App" />
+        <ListItemText
+          primary="Modular Design App"
+          className="font-bold text-lg"
+        />
       </Toolbar>
       <Divider />
       <List>
-        <ListItem component={Link} href="/">
+        <ListItem
+          component={Link}
+          href="/"
+          className="flex items-center space-x-2 p-2 rounded hover:bg-gray-200"
+        >
           <ListItemIcon>
             <HomeIcon />
           </ListItemIcon>
           <ListItemText primary="Home" />
         </ListItem>
-        <ListItem component={Link} href="/users">
+        <ListItem
+          component={Link}
+          href="/users"
+          className="flex items-center space-x-2 p-2 rounded hover:bg-gray-200"
+        >
           <ListItemIcon>
             <PeopleIcon />
           </ListItemIcon>
           <ListItemText primary="User List" />
         </ListItem>
         {authenticated ? (
-          <ListItem component={Link} onClick={logout} href="">
+          <ListItem
+            component={Link}
+            onClick={logout}
+            href=""
+            className="flex items-center space-x-2 p-2 rounded hover:bg-gray-200"
+          >
             <ListItemIcon>
               <Logout />
             </ListItemIcon>
             <ListItemText primary="Logout" />
           </ListItem>
         ) : (
-          <ListItem component={Link} href="/auth">
+          <ListItem
+            component={Link}
+            href="/auth"
+            className="flex items-center space-x-2 p-2 rounded hover:bg-gray-200"
+          >
             <ListItemIcon>
               <Login />
             </ListItemIcon>
