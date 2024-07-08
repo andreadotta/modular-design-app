@@ -1,7 +1,9 @@
 import React from 'react';
 import Sidebar from '@/components/sidebar/ui';
-import StyledBox from '@/ui/box/styled-box';
+import CustomBox from '@/ui/box/custom-box';
 import CustomContainer from '@/ui/containers/custom-container';
+
+const drawerWidth = 240;
 
 export default function MainLayout({
   children,
@@ -9,9 +11,15 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <CustomContainer maxWidth="lg">
-      <Sidebar />
-      <StyledBox component="main">{children}</StyledBox>
+    <CustomContainer maxWidth="lg" className="flex flex-row h-screen">
+      <Sidebar drawerWidth={drawerWidth} />
+      <CustomBox
+        component="main"
+        className="flex-grow p-4"
+        leftMargin={drawerWidth}
+      >
+        {children}
+      </CustomBox>
     </CustomContainer>
   );
 }

@@ -4,6 +4,8 @@ import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import theme from '@/theme';
 import { AuthProvider } from '@/auth';
+import './styles/global.css';
+
 export default function RootLayout({
   children,
 }: {

@@ -6,10 +6,10 @@ import { CountryFromCoordinates, User } from '../types/user';
 import { ErrorMessage } from '@/utils/error-message';
 import fetchData from '@/shared/utils/fetch-data';
 import { userValidator } from './user-validator';
+import { getCountryFromCoordinates } from '@/geo';
 
-export const getUsers = (
-  geoService: CountryFromCoordinates,
-): TaskEither<Error, User[]> => {
+export const getUsers = (): TaskEither<Error, User[]> => {
+  const geoService = getCountryFromCoordinates;
   const validateUsers = (users: User[]): Either<Error, User[]> => {
     const validatedUsers = users.map(userValidator);
     const errors = validatedUsers.filter(isLeft);

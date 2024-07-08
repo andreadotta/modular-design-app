@@ -1,45 +1,53 @@
-// src/components/containers/users/users-container.tsx
 'use client';
 
+import React from 'react';
 import { Box, Toolbar } from '@mui/material';
-import { getCountryFromCoordinates } from '@/geo';
-import { User, UsersList } from '@/users';
 import CustomButton from '@/ui/buttons/custom-button';
-import { useUsers } from '@/modules/users/hooks/use-users';
-import { useState, useEffect } from 'react';
+import { User, UsersList } from '@/users';
+import { UserEvents, UserEventKeys } from '@/modules/users/events';
+import { createEventBus } from '@/utils/event-bus';
 
 export type UsersPageContainerProps = {
   initialData: User[];
+  token: string;
 };
 
-const UsersContainer = ({ initialData }: UsersPageContainerProps) => {
-  const { data, loading, error, refreshUsers } = useUsers(
-    getCountryFromCoordinates,
-  );
-  const [localData, setLocalData] = useState<User[]>(initialData);
+const UsersContainer: React.FC<UsersPageContainerProps> = ({
+  initialData,
+  token,
+}) => {
+  const userEventBus = createEventBus<UserEvents>('users-scope');
 
-  useEffect(() => {
-    if (data.length > 0) {
-      setLocalData(data);
-    }
-  }, [data]);
+  const emitRefreshUsers = () => {
+    userEventBus.emit(UserEventKeys.refreshUsers, undefined);
+  };
 
   return (
     <div>
-      <Box display="flex" justifyContent="space-between" alignItems="center">
-        <h1>Users List</h1>
-        <Toolbar>
-          <CustomButton
-            variant="contained"
-            color="primary"
-            onClick={refreshUsers}
-          >
-            Refresh
-          </CustomButton>
-        </Toolbar>
+      <Box>
+        <Box
+          display="flex"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={2}
+        >
+          <h1>Users List</h1>
+          <Toolbar>
+            <CustomButton
+              variant="contained"
+              color="primary"
+              onClick={emitRefreshUsers}
+            >
+              Refresh
+            </CustomButton>
+          </Toolbar>
+        </Box>
+        <UsersList
+          token={token}
+          initialData={initialData}
+          eventBus={userEventBus}
+        />
       </Box>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <UsersList data={localData} loading={loading} />
     </div>
   );
 };
